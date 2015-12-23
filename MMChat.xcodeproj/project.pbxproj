@@ -8,11 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		8B2E53CE1C2AC31900C9AC47 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2E53CD1C2AC31900C9AC47 /* AppDelegate.swift */; };
-		8B2E53D01C2AC31900C9AC47 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2E53CF1C2AC31900C9AC47 /* ViewController.swift */; };
 		8B2E53D31C2AC31900C9AC47 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B2E53D11C2AC31900C9AC47 /* Main.storyboard */; };
 		8B2E53D51C2AC31900C9AC47 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B2E53D41C2AC31900C9AC47 /* Assets.xcassets */; };
 		8B2E53D81C2AC31900C9AC47 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B2E53D61C2AC31900C9AC47 /* LaunchScreen.storyboard */; };
 		8B2E53E31C2AC31900C9AC47 /* MMChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2E53E21C2AC31900C9AC47 /* MMChatTests.swift */; };
+		8B8E80331C2ACAC8008D8C43 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E80321C2ACAC8008D8C43 /* BaseViewController.swift */; };
+		8B8E80351C2ACB15008D8C43 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E80341C2ACB15008D8C43 /* SignInViewController.swift */; };
+		8B8E80381C2ACDBE008D8C43 /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E80371C2ACDBE008D8C43 /* BaseNavigationController.swift */; };
+		8B8E803A1C2AE17E008D8C43 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E80391C2AE17E008D8C43 /* ForgotPasswordViewController.swift */; };
+		8B8E803C1C2AE733008D8C43 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E803B1C2AE733008D8C43 /* RegisterViewController.swift */; };
 		C9BF0143BBC1E4E412BF8629 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6622CC48F4FE90AA03DBE8F9 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
@@ -30,7 +34,6 @@
 		6622CC48F4FE90AA03DBE8F9 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B2E53CA1C2AC31900C9AC47 /* MMChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MMChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B2E53CD1C2AC31900C9AC47 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8B2E53CF1C2AC31900C9AC47 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		8B2E53D21C2AC31900C9AC47 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8B2E53D41C2AC31900C9AC47 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8B2E53D71C2AC31900C9AC47 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -38,6 +41,11 @@
 		8B2E53DE1C2AC31900C9AC47 /* MMChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MMChatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B2E53E21C2AC31900C9AC47 /* MMChatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMChatTests.swift; sourceTree = "<group>"; };
 		8B2E53E41C2AC31900C9AC47 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8B8E80321C2ACAC8008D8C43 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		8B8E80341C2ACB15008D8C43 /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
+		8B8E80371C2ACDBE008D8C43 /* BaseNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
+		8B8E80391C2AE17E008D8C43 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
+		8B8E803B1C2AE733008D8C43 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		9B1845AFF91157CEDCC1D6E3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D530003B360E31447A1F6A63 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -92,8 +100,10 @@
 		8B2E53CC1C2AC31900C9AC47 /* MMChat */ = {
 			isa = PBXGroup;
 			children = (
+				8B8E80361C2ACB96008D8C43 /* Resources */,
+				8B8E802D1C2ACA1F008D8C43 /* Library */,
+				8B8E802B1C2AC6CC008D8C43 /* UI */,
 				8B2E53CD1C2AC31900C9AC47 /* AppDelegate.swift */,
-				8B2E53CF1C2AC31900C9AC47 /* ViewController.swift */,
 				8B2E53D11C2AC31900C9AC47 /* Main.storyboard */,
 				8B2E53D41C2AC31900C9AC47 /* Assets.xcassets */,
 				8B2E53D61C2AC31900C9AC47 /* LaunchScreen.storyboard */,
@@ -109,6 +119,72 @@
 				8B2E53E41C2AC31900C9AC47 /* Info.plist */,
 			);
 			path = MMChatTests;
+			sourceTree = "<group>";
+		};
+		8B8E802B1C2AC6CC008D8C43 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				8B8E802C1C2AC8E1008D8C43 /* Controllers */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		8B8E802C1C2AC8E1008D8C43 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				8B8E80341C2ACB15008D8C43 /* SignInViewController.swift */,
+				8B8E80391C2AE17E008D8C43 /* ForgotPasswordViewController.swift */,
+				8B8E803B1C2AE733008D8C43 /* RegisterViewController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		8B8E802D1C2ACA1F008D8C43 /* Library */ = {
+			isa = PBXGroup;
+			children = (
+				8B8E802E1C2ACA1F008D8C43 /* Base classes */,
+				8B8E802F1C2ACA1F008D8C43 /* Helpers */,
+			);
+			path = Library;
+			sourceTree = "<group>";
+		};
+		8B8E802E1C2ACA1F008D8C43 /* Base classes */ = {
+			isa = PBXGroup;
+			children = (
+				8B8E80301C2ACA89008D8C43 /* Navigation Controller */,
+				8B8E80311C2ACA89008D8C43 /* View Controller */,
+			);
+			path = "Base classes";
+			sourceTree = "<group>";
+		};
+		8B8E802F1C2ACA1F008D8C43 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		8B8E80301C2ACA89008D8C43 /* Navigation Controller */ = {
+			isa = PBXGroup;
+			children = (
+				8B8E80371C2ACDBE008D8C43 /* BaseNavigationController.swift */,
+			);
+			path = "Navigation Controller";
+			sourceTree = "<group>";
+		};
+		8B8E80311C2ACA89008D8C43 /* View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				8B8E80321C2ACAC8008D8C43 /* BaseViewController.swift */,
+			);
+			path = "View Controller";
+			sourceTree = "<group>";
+		};
+		8B8E80361C2ACB96008D8C43 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		E34B15ABF8CC1C3FB094E241 /* Pods */ = {
@@ -272,8 +348,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8B2E53D01C2AC31900C9AC47 /* ViewController.swift in Sources */,
+				8B8E80381C2ACDBE008D8C43 /* BaseNavigationController.swift in Sources */,
+				8B8E803A1C2AE17E008D8C43 /* ForgotPasswordViewController.swift in Sources */,
 				8B2E53CE1C2AC31900C9AC47 /* AppDelegate.swift in Sources */,
+				8B8E803C1C2AE733008D8C43 /* RegisterViewController.swift in Sources */,
+				8B8E80331C2ACAC8008D8C43 /* BaseViewController.swift in Sources */,
+				8B8E80351C2ACB15008D8C43 /* SignInViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
