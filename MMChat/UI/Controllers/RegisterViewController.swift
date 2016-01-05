@@ -54,6 +54,7 @@ class RegisterViewController : BaseViewController {
             user.firstName = firstName
             user.lastName = lastName
             user.password = password
+            user.email = email
             
             user.register({ [weak self] user in
                 self?.login()
@@ -65,11 +66,11 @@ class RegisterViewController : BaseViewController {
                 print("[ERROR]: \(error)")
             })
         } catch InputError.InvalidUserNames {
-            self.showAlert("Please enter your first and last name", title: "Field required")
+            self.showAlert("Please enter your first and last name", title: "Field required", closeTitle: "Close")
         } catch InputError.InvalidEmail {
-            self.showAlert("Please enter your email", title: "Field required")
+            self.showAlert("Please enter your email", title: "Field required", closeTitle: "Close")
         } catch InputError.InvalidPassword {
-            self.showAlert("Please enter your password and verify your password again", title: "Passwords do not match")
+            self.showAlert("Please enter your password and verify your password again", title: "Passwords do not match", closeTitle: "Close")
         } catch { }
     }
     
@@ -139,7 +140,7 @@ class RegisterViewController : BaseViewController {
             MMUser.login(credential, success: {
                 // Initialize Magnet Message
                 MagnetMax.initModule(MMX.sharedInstance(), success: { [weak self] in
-//                            self?.performSegueWithIdentifier("featuresSegue", sender: nil)
+                    self?.performSegueWithIdentifier("registerToMenuSegue", sender: nil)
                 }, failure: { error in
                         print("[ERROR]: \(error)")
                 })
@@ -147,13 +148,6 @@ class RegisterViewController : BaseViewController {
                 print("[ERROR]: \(error.localizedDescription)")
             })
         } catch { }
-    }
-    
-    func showAlert(message :String, title :String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        let closeAction = UIAlertAction(title: title, style: .Cancel, handler: nil)
-        alert.addAction(closeAction)
-        self.presentViewController(alert, animated: true, completion: nil)
     }
     
     func moveView(up: Bool) {

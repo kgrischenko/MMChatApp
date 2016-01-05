@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MagnetMax
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -15,7 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        // Initialize MagnetMax
+        let configurationFile = NSBundle.mainBundle().pathForResource("MagnetMax", ofType: "plist")
+        let configuration = MMPropertyListConfiguration(contentsOfFile: configurationFile!)
+        MagnetMax.configure(configuration!)
+        
         return true
     }
 

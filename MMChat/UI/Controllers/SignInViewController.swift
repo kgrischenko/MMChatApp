@@ -7,12 +7,13 @@
 //
 
 import UIKit
+import MagnetMax
 
 class SignInViewController : BaseViewController {
     
-    @IBOutlet weak var txtfEmail : UITextField?
-    @IBOutlet weak var txtfPassword : UITextField?
-    @IBOutlet weak var btnRemember : UISwitch?
+    @IBOutlet weak var txtfEmail : UITextField!
+    @IBOutlet weak var txtfPassword : UITextField!
+    @IBOutlet weak var btnRemember : UISwitch!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,13 +21,42 @@ class SignInViewController : BaseViewController {
         // Do any additional setup after loading the view.
     }
     
-    
     @IBAction func signInAction() {
-    
-    }
-    
-    @IBAction func createAccountAction() {
         
+//        self.performSegueWithIdentifier("showSlideMenuVC", sender: nil)
+
+        // Validate
+        if let (email, password) = validateCredential() {
+        
+            // Login
+            let credential = NSURLCredential(user: email, password: password, persistence: .None)
+            
+            MMUser.login(credential, success: {
+                // Initialize Magnet Message
+                MagnetMax.initModule(MMX.sharedInstance(), success: { [weak self] in
+                    self?.performSegueWithIdentifier("showSlideMenuVC", sender: nil)
+                }, failure: { error in
+                    print("[ERROR]: \(error)")
+                })
+            }, failure: { error in
+                print("[ERROR]: \(error.localizedDescription)")
+            })
+        } else {
+            showAlert("Email or password is incorrect", title: "Please check your information and try again", closeTitle: "Close")
+        }
+    }
+
+    private func validateCredential() -> (String, String)? {
+        
+        guard let email = txtfEmail.text where (email.isEmpty == false) else {
+            return nil
+        }
+        
+        guard let password = txtfPassword.text where (password.isEmpty == false) else {
+            return nil
+        }
+        
+        return (email, password)
     }
     
 

@@ -20,7 +20,7 @@ import MagnetMaxCore
 import MMX
 
 
-@objc public class MagnetMax: NSObject {
+@objc public class MagnetMax: NSObject, MMUserDelegate {
     
     /// The service adapter with the current configuration.
     static var serviceAdapter: MMServiceAdapter?
@@ -36,9 +36,22 @@ import MMX
         MMCoreConfiguration.currentConfiguration = configuration
         serviceAdapter = MMServiceAdapter(configuration: configuration)
         MMCoreConfiguration.serviceAdapter = serviceAdapter
+        MMUser.delegate = self
         
         // Register Modules
         //        initModule(MMX.sharedInstance())
+    }
+    
+    static public func overrideCompletion(completion: ((error: NSError?) -> Void), error: NSError?, context: String) {
+        guard let e = error else {
+            initializeModule(MMX.sharedInstance(), success: {
+                completion(error:nil)
+                }) { (error) -> Void in
+                    completion(error:error)
+            }
+            return
+        }
+        completion(error: e)
     }
     
     /// Registers observers for various NSNotifications.
@@ -145,6 +158,10 @@ import MMX
             - failure: A block object to be executed when the initialization finishes with an error. This block has no return value and takes one argument: the error object.
     */
     static public func initModule(module: MMModule, success: (() -> Void), failure: ((error: NSError) -> Void)) {
+        success()
+    }
+    
+    static private func initializeModule(module: MMModule, success: (() -> Void), failure: ((error: NSError) -> Void)) {
         dispatch_sync(moduleQueue) {
             self.success = success
             self.failure = failure

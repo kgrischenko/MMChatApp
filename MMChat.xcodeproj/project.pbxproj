@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8B09099C1C3A92870042F361 /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B09099B1C3A92870042F361 /* ChangePasswordViewController.swift */; };
+		8B09099E1C3AB5C60042F361 /* new_message.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B09099D1C3AB5C60042F361 /* new_message.png */; };
+		8B0909A11C3AD5F20042F361 /* SummaryResponseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0909A01C3AD5F20042F361 /* SummaryResponseCell.swift */; };
+		8B0909A31C3AD9280042F361 /* disclosure_indicator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B0909A21C3AD9280042F361 /* disclosure_indicator@2x.png */; };
+		8B0909A51C3ADB030042F361 /* disclosure@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B0909A41C3ADB030042F361 /* disclosure@2x.png */; };
+		8B0909A81C3AE9010042F361 /* MagnetMax.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8B0909A71C3AE9010042F361 /* MagnetMax.plist */; };
+		8B223F481C3308D80096D204 /* menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B223F461C3308D80096D204 /* menu@2x.png */; };
+		8B223F491C3308D80096D204 /* menu@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B223F471C3308D80096D204 /* menu@3x.png */; };
+		8B223F4B1C33099B0096D204 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B223F4A1C33099B0096D204 /* HomeViewController.swift */; };
 		8B2E53CE1C2AC31900C9AC47 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2E53CD1C2AC31900C9AC47 /* AppDelegate.swift */; };
 		8B2E53D31C2AC31900C9AC47 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B2E53D11C2AC31900C9AC47 /* Main.storyboard */; };
 		8B2E53D51C2AC31900C9AC47 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B2E53D41C2AC31900C9AC47 /* Assets.xcassets */; };
@@ -17,6 +26,7 @@
 		8B8E80381C2ACDBE008D8C43 /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E80371C2ACDBE008D8C43 /* BaseNavigationController.swift */; };
 		8B8E803A1C2AE17E008D8C43 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E80391C2AE17E008D8C43 /* ForgotPasswordViewController.swift */; };
 		8B8E803C1C2AE733008D8C43 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E803B1C2AE733008D8C43 /* RegisterViewController.swift */; };
+		8BDF49DA1C32FD5500F0E51B /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BDF49D91C32FD5500F0E51B /* SWRevealViewController.m */; };
 		C9BF0143BBC1E4E412BF8629 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6622CC48F4FE90AA03DBE8F9 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +42,16 @@
 
 /* Begin PBXFileReference section */
 		6622CC48F4FE90AA03DBE8F9 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B09099B1C3A92870042F361 /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
+		8B09099D1C3AB5C60042F361 /* new_message.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = new_message.png; sourceTree = "<group>"; };
+		8B0909A01C3AD5F20042F361 /* SummaryResponseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SummaryResponseCell.swift; sourceTree = "<group>"; };
+		8B0909A21C3AD9280042F361 /* disclosure_indicator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disclosure_indicator@2x.png"; sourceTree = "<group>"; };
+		8B0909A41C3ADB030042F361 /* disclosure@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "disclosure@2x.png"; sourceTree = "<group>"; };
+		8B0909A71C3AE9010042F361 /* MagnetMax.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MagnetMax.plist; sourceTree = "<group>"; };
+		8B223F461C3308D80096D204 /* menu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@2x.png"; sourceTree = "<group>"; };
+		8B223F471C3308D80096D204 /* menu@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu@3x.png"; sourceTree = "<group>"; };
+		8B223F4A1C33099B0096D204 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		8B223F4F1C330CBB0096D204 /* MMChat-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MMChat-Bridging-Header.h"; sourceTree = "<group>"; };
 		8B2E53CA1C2AC31900C9AC47 /* MMChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MMChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B2E53CD1C2AC31900C9AC47 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8B2E53D21C2AC31900C9AC47 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -46,6 +66,8 @@
 		8B8E80371C2ACDBE008D8C43 /* BaseNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
 		8B8E80391C2AE17E008D8C43 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		8B8E803B1C2AE733008D8C43 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		8BDF49D81C32FD5500F0E51B /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
+		8BDF49D91C32FD5500F0E51B /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		9B1845AFF91157CEDCC1D6E3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D530003B360E31447A1F6A63 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -77,6 +99,42 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		8B09099F1C3AD5BF0042F361 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				8B0909A01C3AD5F20042F361 /* SummaryResponseCell.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		8B0909A61C3AE8560042F361 /* Application */ = {
+			isa = PBXGroup;
+			children = (
+				8B0909A71C3AE9010042F361 /* MagnetMax.plist */,
+			);
+			name = Application;
+			sourceTree = "<group>";
+		};
+		8B223F441C3308D80096D204 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				8B223F451C3308D80096D204 /* Menu */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		8B223F451C3308D80096D204 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				8B0909A41C3ADB030042F361 /* disclosure@2x.png */,
+				8B0909A21C3AD9280042F361 /* disclosure_indicator@2x.png */,
+				8B09099D1C3AB5C60042F361 /* new_message.png */,
+				8B223F461C3308D80096D204 /* menu@2x.png */,
+				8B223F471C3308D80096D204 /* menu@3x.png */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
 		8B2E53C11C2AC31900C9AC47 = {
 			isa = PBXGroup;
 			children = (
@@ -100,6 +158,7 @@
 		8B2E53CC1C2AC31900C9AC47 /* MMChat */ = {
 			isa = PBXGroup;
 			children = (
+				8B0909A61C3AE8560042F361 /* Application */,
 				8B8E80361C2ACB96008D8C43 /* Resources */,
 				8B8E802D1C2ACA1F008D8C43 /* Library */,
 				8B8E802B1C2AC6CC008D8C43 /* UI */,
@@ -108,6 +167,7 @@
 				8B2E53D41C2AC31900C9AC47 /* Assets.xcassets */,
 				8B2E53D61C2AC31900C9AC47 /* LaunchScreen.storyboard */,
 				8B2E53D91C2AC31900C9AC47 /* Info.plist */,
+				8B223F4F1C330CBB0096D204 /* MMChat-Bridging-Header.h */,
 			);
 			path = MMChat;
 			sourceTree = "<group>";
@@ -124,6 +184,7 @@
 		8B8E802B1C2AC6CC008D8C43 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				8B09099F1C3AD5BF0042F361 /* Views */,
 				8B8E802C1C2AC8E1008D8C43 /* Controllers */,
 			);
 			path = UI;
@@ -135,6 +196,8 @@
 				8B8E80341C2ACB15008D8C43 /* SignInViewController.swift */,
 				8B8E80391C2AE17E008D8C43 /* ForgotPasswordViewController.swift */,
 				8B8E803B1C2AE733008D8C43 /* RegisterViewController.swift */,
+				8B223F4A1C33099B0096D204 /* HomeViewController.swift */,
+				8B09099B1C3A92870042F361 /* ChangePasswordViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -160,6 +223,7 @@
 		8B8E802F1C2ACA1F008D8C43 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				8BDF49D71C32FD5500F0E51B /* SWRevealViewController */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -183,8 +247,18 @@
 		8B8E80361C2ACB96008D8C43 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8B223F441C3308D80096D204 /* Images */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		8BDF49D71C32FD5500F0E51B /* SWRevealViewController */ = {
+			isa = PBXGroup;
+			children = (
+				8BDF49D81C32FD5500F0E51B /* SWRevealViewController.h */,
+				8BDF49D91C32FD5500F0E51B /* SWRevealViewController.m */,
+			);
+			path = SWRevealViewController;
 			sourceTree = "<group>";
 		};
 		E34B15ABF8CC1C3FB094E241 /* Pods */ = {
@@ -280,8 +354,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B223F491C3308D80096D204 /* menu@3x.png in Resources */,
 				8B2E53D81C2AC31900C9AC47 /* LaunchScreen.storyboard in Resources */,
+				8B0909A31C3AD9280042F361 /* disclosure_indicator@2x.png in Resources */,
+				8B0909A51C3ADB030042F361 /* disclosure@2x.png in Resources */,
+				8B223F481C3308D80096D204 /* menu@2x.png in Resources */,
 				8B2E53D51C2AC31900C9AC47 /* Assets.xcassets in Resources */,
+				8B0909A81C3AE9010042F361 /* MagnetMax.plist in Resources */,
+				8B09099E1C3AB5C60042F361 /* new_message.png in Resources */,
 				8B2E53D31C2AC31900C9AC47 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -348,8 +428,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BDF49DA1C32FD5500F0E51B /* SWRevealViewController.m in Sources */,
+				8B0909A11C3AD5F20042F361 /* SummaryResponseCell.swift in Sources */,
 				8B8E80381C2ACDBE008D8C43 /* BaseNavigationController.swift in Sources */,
 				8B8E803A1C2AE17E008D8C43 /* ForgotPasswordViewController.swift in Sources */,
+				8B09099C1C3A92870042F361 /* ChangePasswordViewController.swift in Sources */,
+				8B223F4B1C33099B0096D204 /* HomeViewController.swift in Sources */,
 				8B2E53CE1C2AC31900C9AC47 /* AppDelegate.swift in Sources */,
 				8B8E803C1C2AE733008D8C43 /* RegisterViewController.swift in Sources */,
 				8B8E80331C2ACAC8008D8C43 /* BaseViewController.swift in Sources */,
@@ -486,6 +570,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.magnet.MMChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MMChat/MMChat-Bridging-Header.h";
 			};
 			name = Debug;
 		};
@@ -499,6 +584,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.magnet.MMChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "MMChat/MMChat-Bridging-Header.h";
 			};
 			name = Release;
 		};
