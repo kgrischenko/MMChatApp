@@ -18,12 +18,9 @@ class HomeViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        var title = ""
-        if let firstName = MMUser.currentUser()?.firstName {
-            title = firstName
-        }
-        if let lastName = MMUser.currentUser()?.lastName {
-            title += " \(lastName)"
+        var title = String()
+        if let user = MMUser.currentUser() {
+            title = "\(user.firstName ?? "") \(user.lastName ?? "")"
         }
         self.title = title
 

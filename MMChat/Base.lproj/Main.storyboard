@@ -131,10 +131,10 @@
             </objects>
             <point key="canvasLocation" x="1608" y="466"/>
         </scene>
-        <!--Table View Controller-->
+        <!--Rear Menu View Controller-->
         <scene sceneID="yiW-lR-aWa">
             <objects>
-                <tableViewController id="R7P-fI-G7h" sceneMemberID="viewController">
+                <tableViewController id="R7P-fI-G7h" customClass="RearMenuViewController" customModule="MMChat" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" id="Xnw-dK-Nhd">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -206,7 +206,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QOa-ap-nSf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2299" y="1184"/>
+            <point key="canvasLocation" x="1608" y="1236"/>
         </scene>
         <!--Change Password-->
         <scene sceneID="3uF-XY-qjs">
@@ -352,7 +352,7 @@
                                                 <constraint firstAttribute="height" constant="56" id="1fA-tY-0qa"/>
                                             </constraints>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                     </subviews>
@@ -390,11 +390,65 @@
                     </tableView>
                     <navigationItem key="navigationItem" id="cU0-hG-7gc">
                         <barButtonItem key="leftBarButtonItem" image="menu.png" id="1qI-Yj-zA4"/>
+                        <barButtonItem key="rightBarButtonItem" image="new_message.png" id="Ohj-9H-3ej">
+                            <connections>
+                                <segue destination="l6R-Te-dnJ" kind="show" id="dIj-R1-qZz"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="16K-aZ-QHS" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3010" y="1184"/>
+            <point key="canvasLocation" x="2299" y="1236"/>
+        </scene>
+        <!--Contacts View Controller-->
+        <scene sceneID="J7X-9q-xGt">
+            <objects>
+                <tableViewController id="l6R-Te-dnJ" customClass="ContactsViewController" customModule="MMChat" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="q09-19-W86">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="UserCellIdentifier" textLabel="Jdb-D9-PjA" style="IBUITableViewCellStyleDefault" id="4Zq-Xv-Zst">
+                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4Zq-Xv-Zst" id="RLl-Vx-kli">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Jdb-D9-PjA">
+                                            <rect key="frame" x="15" y="0.0" width="570" height="43"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="l6R-Te-dnJ" id="sjm-Ep-u4q"/>
+                            <outlet property="delegate" destination="l6R-Te-dnJ" id="Nj6-aO-3VH"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="REY-To-fTb">
+                        <barButtonItem key="leftBarButtonItem" systemItem="cancel" id="B3a-wD-OIB">
+                            <connections>
+                                <action selector="cancelAction" destination="l6R-Te-dnJ" id="5fH-Ar-usb"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Next" id="j02-LU-JeJ">
+                            <connections>
+                                <action selector="nextAction" destination="l6R-Te-dnJ" id="JhH-Gu-4Ns"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="riZ-lG-y2G" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2997" y="1236"/>
         </scene>
         <!--Register View Controller-->
         <scene sceneID="hFr-EV-rLZ">
@@ -530,7 +584,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QRs-bU-D3M" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1506" y="1228"/>
+            <point key="canvasLocation" x="914" y="1236"/>
         </scene>
         <!--Forgot Password View Controller-->
         <scene sceneID="1hk-bY-jJn">
@@ -597,7 +651,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Hh1-90-O7n" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="890" y="1228"/>
+            <point key="canvasLocation" x="242" y="1248"/>
         </scene>
         <!--Base Navigation Controller-->
         <scene sceneID="gxJ-J5-AYV">
@@ -639,6 +693,7 @@
     <resources>
         <image name="disclosure_indicator.png" width="25" height="40"/>
         <image name="menu.png" width="24" height="14"/>
+        <image name="new_message.png" width="44" height="37"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="hYW-jJ-cei"/>

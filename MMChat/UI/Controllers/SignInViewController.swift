@@ -30,8 +30,7 @@ class SignInViewController : BaseViewController {
         
             // Login
             let credential = NSURLCredential(user: email, password: password, persistence: .None)
-            
-            MMUser.login(credential, success: {
+            MMUser.login(credential, rememberMe: btnRemember.on, success: {
                 // Initialize Magnet Message
                 MagnetMax.initModule(MMX.sharedInstance(), success: { [weak self] in
                     self?.performSegueWithIdentifier("showSlideMenuVC", sender: nil)
@@ -39,7 +38,8 @@ class SignInViewController : BaseViewController {
                     print("[ERROR]: \(error)")
                 })
             }, failure: { error in
-                print("[ERROR]: \(error.localizedDescription)")
+                print("[ERROR]: \(error)")
+                self.showAlert(error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close")
             })
         } else {
             showAlert("Email or password is incorrect", title: "Please check your information and try again", closeTitle: "Close")

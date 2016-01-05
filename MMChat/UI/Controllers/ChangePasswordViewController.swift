@@ -30,7 +30,7 @@ class ChangePasswordViewController: BaseViewController {
         guard let user = MMUser.currentUser(),
             let currentPassword = txtfCurrentPassword.text where (currentPassword.isEmpty == false),
             let newPassword = txtfNewPassword.text where (newPassword.isEmpty == false),
-            let newPasswordAgain = txtfNewPasswordAgain.text where (newPasswordAgain.isEmpty == false && newPassword != newPasswordAgain)
+            let newPasswordAgain = txtfNewPasswordAgain.text where (newPasswordAgain.isEmpty == false && newPassword == newPasswordAgain)
             else {
                 showAlert("Either you entered the incorrect current password or your new password does not match", title: "Passwords do not match", closeTitle: "Try again")
                 return

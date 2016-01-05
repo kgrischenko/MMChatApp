@@ -142,7 +142,7 @@ class RegisterViewController : BaseViewController {
                 MagnetMax.initModule(MMX.sharedInstance(), success: { [weak self] in
                     self?.performSegueWithIdentifier("registerToMenuSegue", sender: nil)
                 }, failure: { error in
-                        print("[ERROR]: \(error)")
+                    print("[ERROR]: \(error)")
                 })
             }, failure: { error in
                 print("[ERROR]: \(error.localizedDescription)")

@@ -21,6 +21,8 @@
 		8B2E53D51C2AC31900C9AC47 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8B2E53D41C2AC31900C9AC47 /* Assets.xcassets */; };
 		8B2E53D81C2AC31900C9AC47 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8B2E53D61C2AC31900C9AC47 /* LaunchScreen.storyboard */; };
 		8B2E53E31C2AC31900C9AC47 /* MMChatTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2E53E21C2AC31900C9AC47 /* MMChatTests.swift */; };
+		8B3EBB5F1C3BE0F400BAED8E /* RearMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3EBB5E1C3BE0F400BAED8E /* RearMenuViewController.swift */; };
+		8B3EBB611C3BF80300BAED8E /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B3EBB601C3BF80200BAED8E /* ContactsViewController.swift */; };
 		8B8E80331C2ACAC8008D8C43 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E80321C2ACAC8008D8C43 /* BaseViewController.swift */; };
 		8B8E80351C2ACB15008D8C43 /* SignInViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E80341C2ACB15008D8C43 /* SignInViewController.swift */; };
 		8B8E80381C2ACDBE008D8C43 /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E80371C2ACDBE008D8C43 /* BaseNavigationController.swift */; };
@@ -61,6 +63,8 @@
 		8B2E53DE1C2AC31900C9AC47 /* MMChatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MMChatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B2E53E21C2AC31900C9AC47 /* MMChatTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MMChatTests.swift; sourceTree = "<group>"; };
 		8B2E53E41C2AC31900C9AC47 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8B3EBB5E1C3BE0F400BAED8E /* RearMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RearMenuViewController.swift; sourceTree = "<group>"; };
+		8B3EBB601C3BF80200BAED8E /* ContactsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		8B8E80321C2ACAC8008D8C43 /* BaseViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		8B8E80341C2ACB15008D8C43 /* SignInViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInViewController.swift; sourceTree = "<group>"; };
 		8B8E80371C2ACDBE008D8C43 /* BaseNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
@@ -198,6 +202,8 @@
 				8B8E803B1C2AE733008D8C43 /* RegisterViewController.swift */,
 				8B223F4A1C33099B0096D204 /* HomeViewController.swift */,
 				8B09099B1C3A92870042F361 /* ChangePasswordViewController.swift */,
+				8B3EBB5E1C3BE0F400BAED8E /* RearMenuViewController.swift */,
+				8B3EBB601C3BF80200BAED8E /* ContactsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -433,7 +439,9 @@
 				8B8E80381C2ACDBE008D8C43 /* BaseNavigationController.swift in Sources */,
 				8B8E803A1C2AE17E008D8C43 /* ForgotPasswordViewController.swift in Sources */,
 				8B09099C1C3A92870042F361 /* ChangePasswordViewController.swift in Sources */,
+				8B3EBB611C3BF80300BAED8E /* ContactsViewController.swift in Sources */,
 				8B223F4B1C33099B0096D204 /* HomeViewController.swift in Sources */,
+				8B3EBB5F1C3BE0F400BAED8E /* RearMenuViewController.swift in Sources */,
 				8B2E53CE1C2AC31900C9AC47 /* AppDelegate.swift in Sources */,
 				8B8E803C1C2AE733008D8C43 /* RegisterViewController.swift in Sources */,
 				8B8E80331C2ACAC8008D8C43 /* BaseViewController.swift in Sources */,
