@@ -19,21 +19,25 @@ class SummaryResponseCell: UITableViewCell {
     
     var summaryResponse : MMXChannelSummaryResponse! {
         didSet {
-            if let subscribers = summaryResponse.subscribers as? [MMUser] {
-                lblSubscribers.text = subscribers.first?.userName
-            }
-            if let messages = summaryResponse.messages as? [MMXMessage] {
-                lblMessage.text = messages.last?.messageContent["message"]
-            }
-            
-            lblLastTime.text = summaryResponse.lastPublishedTime
+//            if let subscribers = summaryResponse.subscribers as? [MMUser] {
+//                lblSubscribers.text = subscribers.first?.userName
+//            }
+//            if let messages = summaryResponse.messages as? [MMXMessage] {
+//                lblMessage.text = messages.last?.messageContent["message"]
+//            }
+//            
+//            lblLastTime.text = summaryResponse.lastPublishedTime
+            lblSubscribers.text = "John Smith, Jane Doe, Keanu Reaves"
+            lblMessage.text = "Copyright © 2016 Kostya Grishchenko. All rights reserved."
+            lblLastTime.text = "Wednesday"
+            ivMessageIcon.image = UIImage(named: "messages.png")
         }
     }
 
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        vNewMessageIndicator.backgroundColor = UIColor.blueColor()
+        vNewMessageIndicator.backgroundColor = self.contentView.tintColor
         vNewMessageIndicator.layer.cornerRadius = vNewMessageIndicator.bounds.width / 2
         vNewMessageIndicator.clipsToBounds = true
     }

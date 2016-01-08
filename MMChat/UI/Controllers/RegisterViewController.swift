@@ -9,7 +9,7 @@
 import UIKit
 import MagnetMax
 
-class RegisterViewController : BaseViewController {
+class RegisterViewController : BaseViewController, UITextFieldDelegate {
     
     @IBOutlet weak var txtfFirstName : UITextField!
     @IBOutlet weak var txtfLastName : UITextField!
@@ -64,6 +64,7 @@ class RegisterViewController : BaseViewController {
                     self?.login()
                 }
                 print("[ERROR]: \(error)")
+                self?.showAlert(error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close")
             })
         } catch InputError.InvalidUserNames {
             self.showAlert("Please enter your first and last name", title: "Field required", closeTitle: "Close")
@@ -146,6 +147,7 @@ class RegisterViewController : BaseViewController {
                 })
             }, failure: { error in
                 print("[ERROR]: \(error.localizedDescription)")
+                self.showAlert(error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close")
             })
         } catch { }
     }

@@ -29,16 +29,20 @@ class SignInViewController : BaseViewController {
         if let (email, password) = validateCredential() {
         
             // Login
+            self.showLoadingIndicator()
             let credential = NSURLCredential(user: email, password: password, persistence: .None)
             MMUser.login(credential, rememberMe: btnRemember.on, success: {
                 // Initialize Magnet Message
                 MagnetMax.initModule(MMX.sharedInstance(), success: { [weak self] in
+                    self?.hideLoadingIndicator()
                     self?.performSegueWithIdentifier("showSlideMenuVC", sender: nil)
                 }, failure: { error in
+                    self.hideLoadingIndicator()
                     print("[ERROR]: \(error)")
                 })
             }, failure: { error in
                 print("[ERROR]: \(error)")
+                self.hideLoadingIndicator()
                 self.showAlert(error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close")
             })
         } else {

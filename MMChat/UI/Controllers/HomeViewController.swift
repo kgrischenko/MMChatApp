@@ -9,12 +9,11 @@
 import UIKit
 import MagnetMax
 
-class HomeViewController: UITableViewController {
+class HomeViewController: UITableViewController, ContactsViewControllerDelegate {
     
     let searchController = UISearchController(searchResultsController: nil)
-    var messages : [MMXMessage] = []
-    var filteredMessages : [MMXMessage] = []
     var summaryResponses : [MMXChannelSummaryResponse] = []
+    var filteredSummaryResponses : [MMXChannelSummaryResponse] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,8 +32,9 @@ class HomeViewController: UITableViewController {
         // Add search bar
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
-        definesPresentationContext = true
+        searchController.searchBar.sizeToFit()
         tableView.tableHeaderView = searchController.searchBar
+        tableView.reloadData()
         
         // Get all channels the current user is subscribed to
         MMXChannel.subscribedChannelsWithSuccess({ (channels) -> Void in
@@ -49,13 +49,16 @@ class HomeViewController: UITableViewController {
         }) { error in
             print(error)
         }
+        
+        let summary = MMXChannelSummaryResponse()
+        summaryResponses.append(summary)
     }
     
     // MARK: - Helpers
     
     func filterContentForSearchText(searchText: String) {
-//        filteredCandies = candies.filter { candy in
-//            return candy.name.lowercaseString.containsString(searchText.lowercaseString)
+//        filteredMessages = messages.filter { message in
+//            return message.name.lowercaseString.containsString(searchText.lowercaseString)
 //        }
         
         tableView.reloadData()
@@ -65,12 +68,11 @@ class HomeViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if searchController.active && searchController.searchBar.text != "" {
-            return filteredMessages.count
+            return filteredSummaryResponses.count
         }
-        return messages.count
+        return summaryResponses.count
     }
 
-    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SummaryResponseCell", forIndexPath: indexPath) as! SummaryResponseCell
 //        let candy: Candy
@@ -83,51 +85,58 @@ class HomeViewController: UITableViewController {
         return cell
     }
 
-
-    /*
-    // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
         return true
     }
-    */
+    
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        //FIXME: isLastPersonInChat
+        let isLastPersonInChat = indexPath.section % 2 == 0
+        if isLastPersonInChat {
+            let delete = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
+                // Delete the row from the data source
+                //tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            }
+            delete.backgroundColor = UIColor.redColor()
+            return [delete]
+        } else {
+            let leave = UITableViewRowAction(style: .Normal, title: "Leave") { action, index in
+            }
+            leave.backgroundColor = UIColor.orangeColor()
+            return [leave]
+        }
+    }
 
-    /*
-    // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+ 
     }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
+    
+    //MARK: - ContactsViewControllerDelegate
+    
+    func contactsControllerDidFinish(with selectedUsers: [MMUser]) {
+        if let chatVC = self.storyboard?.instantiateViewControllerWithIdentifier("ChatViewController") as? ChatViewController {
+            chatVC.recipients = selectedUsers
+            self.navigationController?.pushViewController(chatVC, animated: false)
+        }
     }
-    */
 
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "showChatFromChannelSummary" {
+            if let chatVC = segue.destinationViewController as? ChatViewController, let cell = sender as? SummaryResponseCell {
+                if let recipients = cell.summaryResponse.subscribers as? [MMUser] {
+                    chatVC.recipients = recipients
+                }
+            }
+        } else if segue.identifier == "showContactsSelector" {
+            if let navigationVC = segue.destinationViewController as? UINavigationController {
+                if let contactsVC = navigationVC.topViewController as? ContactsViewController {
+                    contactsVC.delegate = self
+                }
+            }
+        }
     }
-    */
 
 }
 
