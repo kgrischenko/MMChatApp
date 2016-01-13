@@ -22,6 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let configuration = MMPropertyListConfiguration(contentsOfFile: configurationFile!)
         MagnetMax.configure(configuration!)
         
+//        MMXLogger.sharedLogger().level = .Verbose
+//        MMXLogger.sharedLogger().startLogging()
+        
         return true
     }
 

@@ -56,15 +56,22 @@ class RegisterViewController : BaseViewController, UITextFieldDelegate {
             user.password = password
             user.email = email
             
+            // Login
+            let credential = NSURLCredential(user: email, password: password, persistence: .None)
+            
+            self.showLoadingIndicator()
+            
             user.register({ [weak self] user in
-                self?.login()
+                self?.login(credential)
             }, failure: { [weak self] error in
                 if error.code == 409 {
                     // The user already exists, let's attempt a login
-                    self?.login()
+                    self?.login(credential)
+                } else {
+                    print("[ERROR]: \(error)")
+                    self?.hideLoadingIndicator()
+                    self?.showAlert(error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close")
                 }
-                print("[ERROR]: \(error)")
-                self?.showAlert(error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close")
             })
         } catch InputError.InvalidUserNames {
             self.showAlert("Please enter your first and last name", title: "Field required", closeTitle: "Close")
@@ -130,26 +137,21 @@ class RegisterViewController : BaseViewController, UITextFieldDelegate {
     
     //MARK: Helpers
     
-    func login() {
-        do {
-            // Validate
-            let (_, _, email, password) = try validateCredential()
+    func login(credential: NSURLCredential) {
             
-            // Login
-            let credential = NSURLCredential(user: email, password: password, persistence: .None)
-            
-            MMUser.login(credential, success: {
-                // Initialize Magnet Message
-                MagnetMax.initModule(MMX.sharedInstance(), success: { [weak self] in
-                    self?.performSegueWithIdentifier("registerToMenuSegue", sender: nil)
-                }, failure: { error in
-                    print("[ERROR]: \(error)")
-                })
+        MMUser.login(credential, success: { [weak self] in
+            // Initialize Magnet Message
+            MagnetMax.initModule(MMX.sharedInstance(), success: {
+                self?.hideLoadingIndicator()
+                self?.performSegueWithIdentifier("registerToMenuSegue", sender: nil)
             }, failure: { error in
-                print("[ERROR]: \(error.localizedDescription)")
-                self.showAlert(error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close")
+                self?.hideLoadingIndicator()
+                print("[ERROR]: \(error)")
             })
-        } catch { }
+        }, failure: { [weak self] error  in
+            self?.hideLoadingIndicator()
+            print("[ERROR]: \(error.localizedDescription)")
+        })
     }
     
     func moveView(up: Bool) {

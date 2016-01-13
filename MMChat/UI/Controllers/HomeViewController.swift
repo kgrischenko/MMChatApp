@@ -14,14 +14,10 @@ class HomeViewController: UITableViewController, ContactsViewControllerDelegate 
     let searchController = UISearchController(searchResultsController: nil)
     var summaryResponses : [MMXChannelSummaryResponse] = []
     var filteredSummaryResponses : [MMXChannelSummaryResponse] = []
+    var subscribedChannels : [MMXChannel] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        var title = String()
-        if let user = MMUser.currentUser() {
-            title = "\(user.firstName ?? "") \(user.lastName ?? "")"
-        }
-        self.title = title
 
         if let revealVC = self.revealViewController() {
             self.navigationItem.leftBarButtonItem!.target = revealVC
@@ -29,18 +25,33 @@ class HomeViewController: UITableViewController, ContactsViewControllerDelegate 
             self.view.addGestureRecognizer(revealVC.panGestureRecognizer())
         }
         
+        // Indicate that you are ready to receive messages now!
+        MMX.start()
+        // Handling disconnection
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didDisconnect:", name: MMUserDidReceiveAuthenticationChallengeNotification, object: nil)
+
+        
         // Add search bar
         searchController.searchResultsUpdater = self
         searchController.dimsBackgroundDuringPresentation = false
         searchController.searchBar.sizeToFit()
         tableView.tableHeaderView = searchController.searchBar
         tableView.reloadData()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if let user = MMUser.currentUser() {
+            self.title = "\(user.firstName ?? "") \(user.lastName ?? "")"
+        }
         
         // Get all channels the current user is subscribed to
-        MMXChannel.subscribedChannelsWithSuccess({ (channels) -> Void in
-            // get summaries
+        MMXChannel.subscribedChannelsWithSuccess({ [weak self] channels in
+            self?.subscribedChannels = channels
+            // Get summaries
             let channelsSet = Set(channels)
-            MMXChannel.channelSummary(channelsSet, numberOfMessages: 5, numberOfSubcribers: 5, success: { [weak self] summaryResponses in
+            MMXChannel.channelSummary(channelsSet, numberOfMessages: 5, numberOfSubcribers: 5, success: {  summaryResponses in
                 self?.summaryResponses = summaryResponses
                 self?.tableView.reloadData()
             }, failure: { error in
@@ -49,14 +60,51 @@ class HomeViewController: UITableViewController, ContactsViewControllerDelegate 
         }) { error in
             print(error)
         }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.title = nil
+    }
+    
+    deinit {
+        // Indicate that you are not ready to receive messages now!
+        MMX.stop()
         
-        let summary = MMXChannelSummaryResponse()
-        summaryResponses.append(summary)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    // MARK: - Notification handler
+    
+    private func didDisconnect(notification: NSNotification) {
+        // Indicate that you are not ready to receive messages now!
+        MMX.stop()
+        
+        // Redirect to the login screen
+        if let revealVC = self.revealViewController() {
+            revealVC.rearViewController.navigationController?.popToRootViewControllerAnimated(true)
+        }
     }
     
     // MARK: - Helpers
     
-    func filterContentForSearchText(searchText: String) {
+    private func isOwnerForChat(channelSummaryIndex index: Int) -> Bool {
+        let channelName = summaryResponses[index].channelName
+        var foundChannel : MMXChannel?
+        subscribedChannels.forEach { (channel) -> () in
+            if channel.name == channelName {
+                foundChannel = channel
+            }
+        }
+        if foundChannel != nil {
+            if foundChannel?.ownerUserID == MMUser.currentUser()?.userID {
+                return true
+            }
+        }
+        return false
+    }
+    
+    private func filterContentForSearchText(searchText: String) {
 //        filteredMessages = messages.filter { message in
 //            return message.name.lowercaseString.containsString(searchText.lowercaseString)
 //        }
@@ -86,12 +134,21 @@ class HomeViewController: UITableViewController, ContactsViewControllerDelegate 
     }
 
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
+        let isLastPersonInChat = indexPath.section % 2 == 0
+        if isLastPersonInChat {
+            if isOwnerForChat(channelSummaryIndex: indexPath.row) {
+                return true
+            }
+            return false
+        } else {
+            return true
+        }
     }
     
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         //FIXME: isLastPersonInChat
-        let isLastPersonInChat = indexPath.section % 2 == 0
+        let summaryResponse = summaryResponses[indexPath.row]
+        let isLastPersonInChat = (summaryResponse.messages.last as! MMXMessage).sender?.userID == MMUser.currentUser()?.userID
         if isLastPersonInChat {
             let delete = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
                 // Delete the row from the data source
@@ -115,7 +172,7 @@ class HomeViewController: UITableViewController, ContactsViewControllerDelegate 
     
     func contactsControllerDidFinish(with selectedUsers: [MMUser]) {
         if let chatVC = self.storyboard?.instantiateViewControllerWithIdentifier("ChatViewController") as? ChatViewController {
-            chatVC.recipients = selectedUsers
+            chatVC.recipients = selectedUsers + [MMUser.currentUser()!]
             self.navigationController?.pushViewController(chatVC, animated: false)
         }
     }
@@ -125,14 +182,15 @@ class HomeViewController: UITableViewController, ContactsViewControllerDelegate 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showChatFromChannelSummary" {
             if let chatVC = segue.destinationViewController as? ChatViewController, let cell = sender as? SummaryResponseCell {
-                if let recipients = cell.summaryResponse.subscribers as? [MMUser] {
-                    chatVC.recipients = recipients
+                if let userInfos = cell.summaryResponse.subscribers as? [MMXUserInfo] {
+                    chatVC.usersIDs = userInfos.map({ $0.userId })
                 }
             }
         } else if segue.identifier == "showContactsSelector" {
             if let navigationVC = segue.destinationViewController as? UINavigationController {
                 if let contactsVC = navigationVC.topViewController as? ContactsViewController {
                     contactsVC.delegate = self
+                    contactsVC.title = "New message"
                 }
             }
         }

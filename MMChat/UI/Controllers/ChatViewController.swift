@@ -11,51 +11,86 @@ import MagnetMax
 import JSQMessagesViewController
 
 class ChatViewController: JSQMessagesViewController {
+    
     internal var chat : MMXChannel?
     var messages = [JSQMessageData]()
-    var recipients = [MMUser]()
+    var usersIDs : [String]!
     var avatars = Dictionary<String, UIImage>()
     var outgoingBubbleImageView = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
     var incomingBubbleImageView = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
+    var recipients : [MMUser]! {
+        didSet {
+            if recipients.count == 2 {
+                var users = recipients
+                if let currentUser = MMUser.currentUser(), index = users.indexOf(currentUser) {
+                    users.removeAtIndex(index)
+                }
+                navigationItem.title = users.first?.firstName!
+            } else {
+                navigationItem.title = "Group"
+            }
+        }
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        senderId = "12345"//MMUser.currentUser()?.userName
-        senderDisplayName = "name"//MMUser.currentUser()?.firstName
+        guard let user = MMUser.currentUser() else {
+            return
+        }
+        
+        senderId = user.userName
+        senderDisplayName = user.firstName
         showLoadEarlierMessagesHeader = true
         collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
         collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
         
+        // Find channel by usersIDs or users
+        if usersIDs != nil {
+            MMUser.usersWithUserIDs(usersIDs, success: { [weak self] users in
+                self?.recipients = users
+                self?.findChannelsBySubscribers(users)
+            }) { error in
+                print("[ERROR]: \(error)")
+            }
+        } else if recipients != nil {
+            self.findChannelsBySubscribers(recipients)
+        }
+    }
+    
+    private func findChannelsBySubscribers(users: [MMUser]) {
         //Check if channel exists
-        MMXChannel.findChannelsBySubscribers(recipients, matchType: .EXACT_MATCH, success: { [weak self] channels in
+        MMXChannel.findChannelsBySubscribers(users, matchType: .EXACT_MATCH, success: { [weak self] channels in
             if channels.count == 0 {
                 //Create new chat
-                let subscribers = Set(self!.recipients)
-                MMXChannel.createWithName(self!.senderId, summary: "\(self!.senderDisplayName) private chat", isPublic: false, publishPermissions: .Subscribers, subscribers: subscribers, success: { channel in
+                let subscribers = Set(users)
+                // Do not create channels with same name
+                let name = "\(self!.senderId)_\(Int(arc4random_uniform(UInt32.max) + 1))"
+                MMXChannel.createWithName(name, summary: "\(self!.senderDisplayName) private chat", isPublic: false, publishPermissions: .Subscribers, subscribers: subscribers, success: { channel in
                     self?.chat = channel
-                }, failure: { (error) -> Void in
+                }, failure: { error in
                     print("[ERROR]: \(error)")
                 })
             } else {
+//                if let channelInfo = channels.first as? MMXChannelInfo {
+//                    MMXChannel.channelForName(channelInfo.name, isPublic: false, success: { [weak self] channel in
+//                        self?.chat = channel
+//                    }, failure: { (error) -> Void in
+//                        print("[ERROR]: \(error)")
+//                    })
+//                }
+                
                 //Use existing
                 self?.chat = channels.first
             }
-        }) { (error) -> Void in
+        }) { error in
             print("[ERROR]: \(error)")
         }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        if recipients.count == 1 {
-            let user = recipients.first
-            navigationItem.title = user?.firstName
-        } else {
-            navigationItem.title = "Group"
-        }
-        // Indicate that you are ready to receive messages now!
-        MMX.start()
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MMXDidReceiveMessageNotification, object: nil)
     }
@@ -65,6 +100,32 @@ class ChatViewController: JSQMessagesViewController {
         
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
+    
+    // MARK: - Public methods
+    
+    func addSubscribers(newSubscribers: [MMUser]) {
+        chat?.subscribersWithLimit(100, offset: 0, success: { (count, subscribedUsers) -> Void in
+            //Check if channel exists
+            let allSubscribers = Set(newSubscribers + subscribedUsers)
+            MMXChannel.findChannelsBySubscribers(Array(allSubscribers), matchType: .EXACT_MATCH, success: { channels in
+                if channels.count == 1 {
+                    //FIXME: use channel
+                } else if channels.count == 0 {
+                    self.chat?.addSubscribers(newSubscribers, success: { invalidUsers in
+                        print(invalidUsers)
+                    }, failure: { error in
+                        print("[ERROR]: \(error)")
+                    })
+                }
+            }, failure: { error in
+                print("[ERROR]: \(error)")
+            })
+        }, failure: { error in
+            print("[ERROR]: \(error)")
+        })
+    }
+    
+    // MARK: - MMX methods
     
     func didReceiveMessage(notification: NSNotification) {
         
@@ -317,7 +378,7 @@ class ChatViewController: JSQMessagesViewController {
     
     // MARK: Helper methods
     
-    func addLocationMediaMessageCompletion() {
+    private func addLocationMediaMessageCompletion() {
         let ferryBuildingInSF = CLLocation(latitude: 37.795313, longitude: -122.393757)
         
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
@@ -335,7 +396,7 @@ class ChatViewController: JSQMessagesViewController {
         }
     }
     
-    func addPhotoMediaMessage() {
+    private func addPhotoMediaMessage() {
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
         
         let messageContent = [ "type": MessageType.Photo.rawValue ]
@@ -353,7 +414,7 @@ class ChatViewController: JSQMessagesViewController {
         }
     }
     
-    func addVideoMediaMessage() {
+    private func addVideoMediaMessage() {
         
         JSQSystemSoundPlayer.jsq_playMessageSentSound()
         

@@ -9,13 +9,13 @@
 import UIKit
 import MagnetMax
 
-protocol ContactsViewControllerDelegate {
+protocol ContactsViewControllerDelegate: class {
     func contactsControllerDidFinish(with selectedUsers: [MMUser])
 }
 
 class ContactsViewController: UITableViewController, UISearchResultsUpdating {
     
-    var delegate: ContactsViewControllerDelegate?
+    weak var delegate: ContactsViewControllerDelegate?
     var availableRecipients = [String : [MMUser]]()
     var filteredRecipients = [MMUser]()
     let resultSearchController = UISearchController(searchResultsController: nil)
@@ -43,11 +43,6 @@ class ContactsViewController: UITableViewController, UISearchResultsUpdating {
         }, failure: { error in
             print("[ERROR]: \(error.localizedDescription)")
         })
-        
-        let user = MMUser()
-        user.firstName = "tempUser"
-        user.userName = "tempUser"
-        self.availableRecipients = ["T" : [user]]
     }
     
     @IBAction func cancelAction() {

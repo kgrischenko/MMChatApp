@@ -19,25 +19,32 @@ class SummaryResponseCell: UITableViewCell {
     
     var summaryResponse : MMXChannelSummaryResponse! {
         didSet {
-//            if let subscribers = summaryResponse.subscribers as? [MMUser] {
-//                lblSubscribers.text = subscribers.first?.userName
-//            }
-//            if let messages = summaryResponse.messages as? [MMXMessage] {
-//                lblMessage.text = messages.last?.messageContent["message"]
-//            }
-//            
-//            lblLastTime.text = summaryResponse.lastPublishedTime
-            lblSubscribers.text = "John Smith, Jane Doe, Keanu Reaves"
-            lblMessage.text = "Copyright © 2016 Kostya Grishchenko. All rights reserved."
-            lblLastTime.text = "Wednesday"
-            ivMessageIcon.image = UIImage(named: "messages.png")
+            if let subscribers = summaryResponse.subscribers as? [MMXUserInfo] {
+                var subscribersTitle = ""
+                for user in subscribers {
+                    if subscribers.indexOf(user) == subscribers.count - 1 {
+                        subscribersTitle += user.displayName!
+                    } else {
+                        subscribersTitle += "\(user.displayName!), "
+                    }
+                }
+                lblSubscribers.text = subscribersTitle
+            }
+            if let messages = summaryResponse.messages as? [MMXPubSubItemChannel], content = messages.last?.content as! [String : String]! {
+                lblMessage.text = content["message"]!
+            }
+            
+            lblLastTime.text = summaryResponse.lastPublishedTime!
+//            lblSubscribers.text = "John Smith, Jane Doe, Keanu Reaves"
+//            lblMessage.text = "Copyright © 2016 Kostya Grishchenko. All rights reserved."
+//            lblLastTime.text = "Wednesday"
+            ivMessageIcon.image = (summaryResponse.subscribers.count > 2) ? UIImage(named: "messages.png") : UIImage(named: "message.png")
         }
     }
 
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        vNewMessageIndicator.backgroundColor = self.contentView.tintColor
         vNewMessageIndicator.layer.cornerRadius = vNewMessageIndicator.bounds.width / 2
         vNewMessageIndicator.clipsToBounds = true
     }

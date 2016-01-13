@@ -11,11 +11,22 @@ import MagnetMax
 
 class DetailsViewController: UITableViewController, ContactsViewControllerDelegate {
     
-    var recipients: [MMUser] = []
+    var recipients : [MMUser]!
+    var channel : MMXChannel!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
+    }
+    
+    @IBAction func leaveAction() {
+        if channel != nil {
+            channel.unSubscribeWithSuccess({ [weak self] in
+                self?.navigationController?.popToRootViewControllerAnimated(true)
+            }, failure: { error in
+                print("[ERROR]: \(error)")
+            })
+        }
     }
 
     // MARK: - Table view data source
@@ -63,6 +74,7 @@ class DetailsViewController: UITableViewController, ContactsViewControllerDelega
             if let navigationVC = self.storyboard?.instantiateViewControllerWithIdentifier("ContactsNavigationController") as? UINavigationController {
                 if let contactsVC = navigationVC.topViewController as? ContactsViewController {
                     contactsVC.delegate = self
+                    contactsVC.title = "Add a contact"
                     self.presentViewController(navigationVC, animated: true, completion: nil)
                 }
             }
@@ -73,9 +85,13 @@ class DetailsViewController: UITableViewController, ContactsViewControllerDelega
     //MARK: - ContactsViewControllerDelegate
     
     func contactsControllerDidFinish(with selectedUsers: [MMUser]) {
-        self.navigationController?.popViewControllerAnimated(false)
-        if let chatVC = self.navigationController?.topViewController as? ChatViewController {
-//            chatVC.recipients = selectedUsers
+        // Show chat after selection of recipients
+        if let navigationVC = self.navigationController {
+            navigationVC.popViewControllerAnimated(false)
+            // Add subscriberst to chat
+            if let chatVC = navigationVC.topViewController as? ChatViewController {
+                chatVC.addSubscribers(selectedUsers)
+            }
         }
     }
     
