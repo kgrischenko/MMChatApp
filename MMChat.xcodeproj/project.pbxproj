@@ -34,6 +34,7 @@
 		8B8E803C1C2AE733008D8C43 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E803B1C2AE733008D8C43 /* RegisterViewController.swift */; };
 		8BA6E34C1C3D94380095F65F /* messages.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BA6E34B1C3D94380095F65F /* messages.png */; };
 		8BDF49DA1C32FD5500F0E51B /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BDF49D91C32FD5500F0E51B /* SWRevealViewController.m */; };
+		8BEAF9871C47B999006728E8 /* PubSubItemChannelMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEAF9861C47B999006728E8 /* PubSubItemChannelMessage.swift */; };
 		C9BF0143BBC1E4E412BF8629 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6622CC48F4FE90AA03DBE8F9 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
@@ -82,6 +83,7 @@
 		8BA6E34B1C3D94380095F65F /* messages.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messages.png; sourceTree = "<group>"; };
 		8BDF49D81C32FD5500F0E51B /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		8BDF49D91C32FD5500F0E51B /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
+		8BEAF9861C47B999006728E8 /* PubSubItemChannelMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PubSubItemChannelMessage.swift; sourceTree = "<group>"; };
 		9B1845AFF91157CEDCC1D6E3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D530003B360E31447A1F6A63 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -127,6 +129,13 @@
 				8B0909A71C3AE9010042F361 /* MagnetMax.plist */,
 			);
 			name = Application;
+			sourceTree = "<group>";
+		};
+		8B1B543B1C46CCB7002B268C /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Categories;
 			sourceTree = "<group>";
 		};
 		8B223F441C3308D80096D204 /* Images */ = {
@@ -210,6 +219,7 @@
 			isa = PBXGroup;
 			children = (
 				8B81C1311C3C21D800C186B6 /* Message.swift */,
+				8BEAF9861C47B999006728E8 /* PubSubItemChannelMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -250,6 +260,7 @@
 		8B8E802D1C2ACA1F008D8C43 /* Library */ = {
 			isa = PBXGroup;
 			children = (
+				8B1B543B1C46CCB7002B268C /* Categories */,
 				8B8E802E1C2ACA1F008D8C43 /* Base classes */,
 				8B8E802F1C2ACA1F008D8C43 /* Helpers */,
 			);
@@ -483,6 +494,7 @@
 				8B09099C1C3A92870042F361 /* ChangePasswordViewController.swift in Sources */,
 				8B3EBB611C3BF80300BAED8E /* ContactsViewController.swift in Sources */,
 				8B223F4B1C33099B0096D204 /* HomeViewController.swift in Sources */,
+				8BEAF9871C47B999006728E8 /* PubSubItemChannelMessage.swift in Sources */,
 				8B3EBB5F1C3BE0F400BAED8E /* RearMenuViewController.swift in Sources */,
 				8B2E53CE1C2AC31900C9AC47 /* AppDelegate.swift in Sources */,
 				8B81C12E1C3C1E5600C186B6 /* ChatViewController.swift in Sources */,

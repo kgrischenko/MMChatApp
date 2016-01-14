@@ -13,6 +13,7 @@ class DetailsViewController: UITableViewController, ContactsViewControllerDelega
     
     var recipients : [MMUser]!
     var channel : MMXChannel!
+    lazy var isChannelOwner: Bool = { return MMUser.currentUser()?.userID == self.channel.ownerUserID }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,8 +40,9 @@ class DetailsViewController: UITableViewController, ContactsViewControllerDelega
         let cell = tableView.dequeueReusableCellWithIdentifier("RecipientsCellIdentifier", forIndexPath: indexPath)
 
         if indexPath.row == recipients.count {
+            let color = isChannelOwner ? self.view.tintColor : UIColor.blackColor()
             cell.textLabel?.attributedText = NSAttributedString(string: "+ Add Contact",
-                                                            attributes: [NSForegroundColorAttributeName : self.view.tintColor,
+                                                            attributes: [NSForegroundColorAttributeName : color,
                                                                          NSFontAttributeName : UIFont.systemFontOfSize((cell.textLabel?.font.pointSize)!)])
         } else {
             let attributes = [NSFontAttributeName : UIFont.boldSystemFontOfSize((cell.textLabel?.font.pointSize)!),
@@ -69,7 +71,7 @@ class DetailsViewController: UITableViewController, ContactsViewControllerDelega
     // MARK: - Table view delegate
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if indexPath.row == recipients.count {
+        if (indexPath.row == recipients.count) && isChannelOwner {
             // Show contact selector
             if let navigationVC = self.storyboard?.instantiateViewControllerWithIdentifier("ContactsNavigationController") as? UINavigationController {
                 if let contactsVC = navigationVC.topViewController as? ContactsViewController {

@@ -19,6 +19,10 @@ class BaseViewController: UIViewController {
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(activityIndicator)
         
+        setConstrainsForActivityIndicator()
+    }
+    
+    func setConstrainsForActivityIndicator() {
         let horizontalCenter = NSLayoutConstraint(item: activityIndicator, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
         let verticalCenter = NSLayoutConstraint(item: activityIndicator, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 0)
         self.view.addConstraints([horizontalCenter, verticalCenter])

@@ -8,6 +8,7 @@
 
 import UIKit
 import MagnetMax
+import JSQMessagesViewController
 
 class SummaryResponseCell: UITableViewCell {
     
@@ -22,11 +23,7 @@ class SummaryResponseCell: UITableViewCell {
             if let subscribers = summaryResponse.subscribers as? [MMXUserInfo] {
                 var subscribersTitle = ""
                 for user in subscribers {
-                    if subscribers.indexOf(user) == subscribers.count - 1 {
-                        subscribersTitle += user.displayName!
-                    } else {
-                        subscribersTitle += "\(user.displayName!), "
-                    }
+                    subscribersTitle += (subscribers.indexOf(user) == subscribers.count - 1) ? user.displayName! : "\(user.displayName!), "
                 }
                 lblSubscribers.text = subscribersTitle
             }
@@ -34,11 +31,9 @@ class SummaryResponseCell: UITableViewCell {
                 lblMessage.text = content["message"]!
             }
             
-            lblLastTime.text = summaryResponse.lastPublishedTime!
-//            lblSubscribers.text = "John Smith, Jane Doe, Keanu Reaves"
-//            lblMessage.text = "Copyright © 2016 Kostya Grishchenko. All rights reserved."
-//            lblLastTime.text = "Wednesday"
+            lblLastTime.text = displayLastPublishedTime()
             ivMessageIcon.image = (summaryResponse.subscribers.count > 2) ? UIImage(named: "messages.png") : UIImage(named: "message.png")
+            vNewMessageIndicator.hidden = !hasNewMessagesFromLastTime()
         }
     }
 
@@ -49,10 +44,38 @@ class SummaryResponseCell: UITableViewCell {
         vNewMessageIndicator.clipsToBounds = true
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    // MARK: - Helpers
+    
+    private func hasNewMessagesFromLastTime() -> Bool {
+        if let lastViewTime = NSUserDefaults.standardUserDefaults().objectForKey(summaryResponse.channelName) as? NSDate {
+            if let lastPublishedTime = dateForLastPublishedTime() {
+                return lastPublishedTime.timeIntervalSince1970 > lastViewTime.timeIntervalSince1970
+            }
+        }
+        
+        return false
+    }
+    
+    private func displayLastPublishedTime() -> String! {
+        let secondsInDay: NSTimeInterval = 24 * 60 * 60
+        let lastDay = NSDate(timeInterval: secondsInDay, sinceDate: NSDate())
+        
+        if let lastPublishedTime = dateForLastPublishedTime() {
+            let result = lastDay.compare(lastPublishedTime)
+            if result == .OrderedAscending {
+                return JSQMessagesTimestampFormatter.sharedFormatter().timeForDate(lastPublishedTime)
+            } else {
+                return JSQMessagesTimestampFormatter.sharedFormatter().relativeDateForDate(lastPublishedTime)
+            }
+        }
+        
+        return summaryResponse.lastPublishedTime!
+    }
+    
+    private func dateForLastPublishedTime() -> NSDate? {
+        let formatter = JSQMessagesTimestampFormatter.sharedFormatter().dateFormatter
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter.dateFromString(summaryResponse.lastPublishedTime)
     }
 
 }

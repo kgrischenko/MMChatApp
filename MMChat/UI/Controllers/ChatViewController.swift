@@ -42,7 +42,7 @@ class ChatViewController: JSQMessagesViewController {
         
         senderId = user.userName
         senderDisplayName = user.firstName
-        showLoadEarlierMessagesHeader = true
+//        showLoadEarlierMessagesHeader = true
         collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
         collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
         
@@ -66,23 +66,26 @@ class ChatViewController: JSQMessagesViewController {
                 //Create new chat
                 let subscribers = Set(users)
                 // Do not create channels with same name
-                let name = "\(self!.senderId)_\(Int(arc4random_uniform(UInt32.max) + 1))"
+                let formatter = JSQMessagesTimestampFormatter.sharedFormatter().dateFormatter
+                formatter.dateFormat = "yyyyMMddHHmmss"
+                let name = "\(self!.senderId)_\(formatter.stringFromDate(NSDate()))"
                 MMXChannel.createWithName(name, summary: "\(self!.senderDisplayName) private chat", isPublic: false, publishPermissions: .Subscribers, subscribers: subscribers, success: { channel in
                     self?.chat = channel
                 }, failure: { error in
                     print("[ERROR]: \(error)")
                 })
             } else {
-//                if let channelInfo = channels.first as? MMXChannelInfo {
-//                    MMXChannel.channelForName(channelInfo.name, isPublic: false, success: { [weak self] channel in
-//                        self?.chat = channel
-//                    }, failure: { (error) -> Void in
-//                        print("[ERROR]: \(error)")
-//                    })
-//                }
+                let info : AnyObject = channels
+                if let channelInfo = info as? [MMXChannelInfo] {
+                    MMXChannel.channelForName(channelInfo.first!.name, isPublic: false, success: { [weak self] channel in
+                        self?.chat = channel
+                    }, failure: { (error) -> Void in
+                        print("[ERROR]: \(error)")
+                    })
+                }
                 
                 //Use existing
-                self?.chat = channels.first
+//                self?.chat = channels.first
             }
         }) { error in
             print("[ERROR]: \(error)")
@@ -99,6 +102,13 @@ class ChatViewController: JSQMessagesViewController {
         super.viewWillDisappear(animated)
         
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    deinit {
+        // Save last channel view time
+        if let _ = chat {
+            NSUserDefaults.standardUserDefaults().setObject(NSDate(), forKey: chat!.name)
+        }
     }
     
     // MARK: - Public methods

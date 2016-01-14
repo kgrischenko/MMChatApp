@@ -9,7 +9,7 @@
 import UIKit
 import MagnetMax
 
-class HomeViewController: UITableViewController, ContactsViewControllerDelegate {
+class HomeViewController: UITableViewController, UISearchResultsUpdating, ContactsViewControllerDelegate {
     
     let searchController = UISearchController(searchResultsController: nil)
     var summaryResponses : [MMXChannelSummaryResponse] = []
@@ -88,28 +88,24 @@ class HomeViewController: UITableViewController, ContactsViewControllerDelegate 
     
     // MARK: - Helpers
     
-    private func isOwnerForChat(channelSummaryIndex index: Int) -> Bool {
-        let channelName = summaryResponses[index].channelName
-        var foundChannel : MMXChannel?
-        subscribedChannels.forEach { (channel) -> () in
-            if channel.name == channelName {
-                foundChannel = channel
+    private func isOwnerForChat(name: String) -> MMXChannel? {
+        if let channel = channelForName(name) {
+            if channel.ownerUserID == MMUser.currentUser()?.userID {
+                return channel
             }
         }
-        if foundChannel != nil {
-            if foundChannel?.ownerUserID == MMUser.currentUser()?.userID {
-                return true
-            }
-        }
-        return false
+
+        return nil
     }
     
-    private func filterContentForSearchText(searchText: String) {
-//        filteredMessages = messages.filter { message in
-//            return message.name.lowercaseString.containsString(searchText.lowercaseString)
-//        }
+    private func channelForName(name: String) -> MMXChannel? {
+        for channel in subscribedChannels {
+            if channel.name == name {
+                return channel
+            }
+        }
         
-        tableView.reloadData()
+        return nil
     }
 
     // MARK: - Table view data source
@@ -123,45 +119,48 @@ class HomeViewController: UITableViewController, ContactsViewControllerDelegate 
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("SummaryResponseCell", forIndexPath: indexPath) as! SummaryResponseCell
-//        let candy: Candy
-//        if searchController.active && searchController.searchBar.text != "" {
-//            candy = filteredCandies[indexPath.row]
-//        } else {
-//            candy = candies[indexPath.row]
-//        }
-        cell.summaryResponse = summaryResponses[indexPath.row]
+        cell.summaryResponse = searchController.active ? filteredSummaryResponses[indexPath.row] : summaryResponses[indexPath.row]
+        
         return cell
     }
 
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        let isLastPersonInChat = indexPath.section % 2 == 0
-        if isLastPersonInChat {
-            if isOwnerForChat(channelSummaryIndex: indexPath.row) {
-                return true
-            }
-            return false
-        } else {
-            return true
-        }
+        return true
     }
     
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        //FIXME: isLastPersonInChat
         let summaryResponse = summaryResponses[indexPath.row]
-        let isLastPersonInChat = (summaryResponse.messages.last as! MMXMessage).sender?.userID == MMUser.currentUser()?.userID
+        let isLastPersonInChat = (summaryResponse.messages.last as! MMXPubSubItemChannel).publisher.userId == MMUser.currentUser()?.userID
+        
         if isLastPersonInChat {
-            let delete = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
-                // Delete the row from the data source
-                //tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            // Current user must be the owner of the channel to delete it
+            if let chat = isOwnerForChat(summaryResponse.channelName) {
+                let delete = UITableViewRowAction(style: .Normal, title: "Delete") { [weak self] action, index in
+                    chat.deleteWithSuccess({ _ in
+                        self?.summaryResponses.removeAtIndex(index.row)
+                        tableView.deleteRowsAtIndexPaths([index], withRowAnimation: .Fade)
+                    }, failure: { error in
+                        print(error)
+                    })
+                }
+                delete.backgroundColor = UIColor.redColor()
+                return [delete]
             }
-            delete.backgroundColor = UIColor.redColor()
-            return [delete]
-        } else {
-            let leave = UITableViewRowAction(style: .Normal, title: "Leave") { action, index in
-            }
-            leave.backgroundColor = UIColor.orangeColor()
-            return [leave]
         }
+        
+        // Unsubscribe
+        let leave = UITableViewRowAction(style: .Normal, title: "Leave") { [weak self] action, index in
+            if let chat = self?.channelForName(summaryResponse.channelName) {
+                chat.unSubscribeWithSuccess({ _ in
+                    self?.summaryResponses.removeAtIndex(index.row)
+                    tableView.deleteRowsAtIndexPaths([index], withRowAnimation: .Fade)
+                }, failure: { error in
+                    print(error)
+                })
+            }
+        }
+        leave.backgroundColor = UIColor.orangeColor()
+        return [leave]
     }
 
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
@@ -182,8 +181,9 @@ class HomeViewController: UITableViewController, ContactsViewControllerDelegate 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showChatFromChannelSummary" {
             if let chatVC = segue.destinationViewController as? ChatViewController, let cell = sender as? SummaryResponseCell {
-                if let userInfos = cell.summaryResponse.subscribers as? [MMXUserInfo] {
+                if let userInfos = cell.summaryResponse.subscribers as? [MMXUserInfo], messages = cell.summaryResponse.messages as? [MMXPubSubItemChannel] {
                     chatVC.usersIDs = userInfos.map({ $0.userId })
+                    chatVC.messages = messages.map({ PubSubItemChannelMessage(pubSubItemChannel: $0) })
                 }
             }
         } else if segue.identifier == "showContactsSelector" {
@@ -195,12 +195,23 @@ class HomeViewController: UITableViewController, ContactsViewControllerDelegate 
             }
         }
     }
-
-}
-
-extension HomeViewController: UISearchResultsUpdating {
+    
+    // MARK: - Helpers
+    
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        filterContentForSearchText(searchController.searchBar.text!)
+        filteredSummaryResponses = summaryResponses.filter { summary in
+            if let pubSubItems = summary.messages as? [MMXPubSubItemChannel] {
+                for message in pubSubItems {
+                    let content = message.content as! [String : String]!
+                    return content["message"]!.containsString(searchController.searchBar.text!.lowercaseString)
+                }
+            }
+            
+            return false
+        }
+        
+        tableView.reloadData()
     }
+
 }
 
