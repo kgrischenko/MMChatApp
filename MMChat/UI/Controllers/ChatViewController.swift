@@ -14,7 +14,6 @@ class ChatViewController: JSQMessagesViewController {
     
     internal var chat : MMXChannel?
     var messages = [JSQMessageData]()
-    var usersIDs : [String]!
     var avatars = Dictionary<String, UIImage>()
     var outgoingBubbleImageView = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
     var incomingBubbleImageView = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
@@ -47,13 +46,12 @@ class ChatViewController: JSQMessagesViewController {
         collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
         
         // Find channel by usersIDs or users
-        if usersIDs != nil {
-            MMUser.usersWithUserIDs(usersIDs, success: { [weak self] users in
+        if chat != nil {
+            chat?.subscribersWithLimit(100, offset: 0, success: { [weak self] (count, users) -> Void in
                 self?.recipients = users
-                self?.findChannelsBySubscribers(users)
-            }) { error in
+            }, failure: { (error) -> Void in
                 print("[ERROR]: \(error)")
-            }
+            })
         } else if recipients != nil {
             self.findChannelsBySubscribers(recipients)
         }
@@ -65,10 +63,12 @@ class ChatViewController: JSQMessagesViewController {
             if channels.count == 0 {
                 //Create new chat
                 let subscribers = Set(users)
-                // Do not create channels with same name
+                
+                // Set channel name
                 let formatter = JSQMessagesTimestampFormatter.sharedFormatter().dateFormatter
                 formatter.dateFormat = "yyyyMMddHHmmss"
                 let name = "\(self!.senderId)_\(formatter.stringFromDate(NSDate()))"
+                
                 MMXChannel.createWithName(name, summary: "\(self!.senderDisplayName) private chat", isPublic: false, publishPermissions: .Subscribers, subscribers: subscribers, success: { channel in
                     self?.chat = channel
                 }, failure: { error in
@@ -89,6 +89,10 @@ class ChatViewController: JSQMessagesViewController {
             }
         }) { error in
             print("[ERROR]: \(error)")
+            let alert = Popup(message: error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close", handler: { _ in
+//                self.navigationController?.popViewControllerAnimated(true)
+            })
+            alert.presentForController(self)
         }
     }
     
@@ -114,22 +118,34 @@ class ChatViewController: JSQMessagesViewController {
     // MARK: - Public methods
     
     func addSubscribers(newSubscribers: [MMUser]) {
-        chat?.subscribersWithLimit(100, offset: 0, success: { (count, subscribedUsers) -> Void in
-            //Check if channel exists
-            let allSubscribers = Set(newSubscribers + subscribedUsers)
-            MMXChannel.findChannelsBySubscribers(Array(allSubscribers), matchType: .EXACT_MATCH, success: { channels in
-                if channels.count == 1 {
-                    //FIXME: use channel
-                } else if channels.count == 0 {
-                    self.chat?.addSubscribers(newSubscribers, success: { invalidUsers in
-                        print(invalidUsers)
-                    }, failure: { error in
-                        print("[ERROR]: \(error)")
-                    })
-                }
+        
+        guard let _ = recipients, let _ = chat else {
+            print("Add subscribers error")
+            return
+        }
+        
+        let allSubscribers = Set(newSubscribers + self.recipients)
+        
+        let addSubscribers = {(subcribers: [MMUser]) -> Void in
+            self.chat?.addSubscribers(subcribers, success: { invalidUsers in
+                print(invalidUsers)
             }, failure: { error in
-                print("[ERROR]: \(error)")
+                print("[ERROR]: can't add subscribers - \(error)")
             })
+        }
+        
+        //Check if channel exists
+        MMXChannel.findChannelsBySubscribers(Array(allSubscribers), matchType: .EXACT_MATCH, success: { channels in
+            if channels.count == 1 {
+                // Delete old chat and continue to use current with new subscribers
+                channels.first!.deleteWithSuccess({ () -> Void in
+                    addSubscribers(newSubscribers)
+                }, failure: { error in
+                    print("[ERROR]: \(error)")
+                })
+            } else if channels.count == 0 {
+                addSubscribers(newSubscribers)
+            }
         }, failure: { error in
             print("[ERROR]: \(error)")
         })
@@ -145,12 +161,6 @@ class ChatViewController: JSQMessagesViewController {
         // Scroll to actually view the indicator
         scrollToBottomAnimated(true)
         
-        /**
-         *  Upon receiving a message, you should:
-         *  1. Play sound (optional)
-         *  2. Add new id<JSQMessageData> object to your data source
-         *  3. Call `finishReceivingMessage`
-         */
         let tmp : [NSObject : AnyObject] = notification.userInfo!
         let mmxMessage = tmp[MMXMessageKey] as! MMXMessage
         
@@ -181,8 +191,8 @@ class ChatViewController: JSQMessagesViewController {
                         message.mediaContent = photo
                         self.collectionView?.reloadData()
                         print("Did load image")
-                        }, failure: { (error) -> Void in
-                            print(error)
+                    }, failure: { (error) -> Void in
+                        print(error)
                     })
                     
                 case .Video:
@@ -191,8 +201,8 @@ class ChatViewController: JSQMessagesViewController {
                         let video = JSQVideoMediaItem(fileURL: fileURL, isReadyToPlay: true)
                         message.mediaContent = video
                         self.collectionView?.reloadData()
-                        }, failure: { (error) -> Void in
-                            print(error)
+                    }, failure: { (error) -> Void in
+                        print(error)
                     })
                 }
             }
@@ -277,23 +287,19 @@ class ChatViewController: JSQMessagesViewController {
     override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
         let message = messages[indexPath.item]
         
-        /**
-        *  iOS7-style sender name labels
-        */
         if message.senderId() == senderId {
             return nil
         }
         
         if indexPath.item - 1 > 0 {
             let previousMessage = messages[indexPath.item - 1]
-            if previousMessage.senderId()  == message.senderId() {
+            if previousMessage.senderId() == message.senderId() {
                 return nil
             }
         }
         
-        /**
-        *  Don't specify attributes to use the defaults.
-        */
+        // Don't specify attributes to use the defaults.
+        
         return NSAttributedString(string: message.senderDisplayName())
     }
     
@@ -318,7 +324,6 @@ class ChatViewController: JSQMessagesViewController {
                 cell.textView!.textColor = UIColor.whiteColor()
             }
             
-            // FIXME: 1
             cell.textView!.linkTextAttributes = [
                 NSForegroundColorAttributeName : cell.textView?.textColor as! AnyObject,
                 NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue | NSUnderlineStyle.PatternSolid.rawValue
@@ -331,9 +336,7 @@ class ChatViewController: JSQMessagesViewController {
     // MARK: JSQMessagesCollectionViewDelegateFlowLayout methods
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForCellTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
-        /**
-        *  Each label in a cell has a `height` delegate method that corresponds to its text dataSource method
-        */
+        //Each label in a cell has a `height` delegate method that corresponds to its text dataSource method
         
         /**
         *  This logic should be consistent with what you return from `attributedTextForCellTopLabelAtIndexPath:`
@@ -348,9 +351,7 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
-        /**
-         *  iOS7-style sender name labels
-         */
+ 
         let currentMessage = messages[indexPath.item]
         if currentMessage.senderId() == senderId {
             return 0.0
@@ -398,7 +399,7 @@ class ChatViewController: JSQMessagesViewController {
             "latitude": "\(ferryBuildingInSF.coordinate.latitude)",
             "longitude": "\(ferryBuildingInSF.coordinate.longitude)"
         ]
-        let mmxMessage = MMXMessage(toChannel: self.chat!, messageContent: messageContent)
+        let mmxMessage = MMXMessage(toChannel: chat!, messageContent: messageContent)
         mmxMessage.sendWithSuccess( { (invalidUsers) -> Void in
             self.finishSendingMessageAnimated(true)
         }) { (error) -> Void in
@@ -407,21 +408,13 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     private func addPhotoMediaMessage() {
-        JSQSystemSoundPlayer.jsq_playMessageSentSound()
         
-        let messageContent = [ "type": MessageType.Photo.rawValue ]
-        let mmxMessage = MMXMessage(toChannel: self.chat!, messageContent: messageContent)
-        let imageName = "goldengate"
-        let imageType = "png"
-        let imagePath = NSBundle.mainBundle().pathForResource(imageName, ofType: imageType)
-        let urlPath = NSURL.init(fileURLWithPath: imagePath!)
-        let attachment = MMAttachment.init(fileURL: urlPath, mimeType: "image/*", name: "Golden gate", description: "Image")
-        mmxMessage.addAttachment(attachment)
-        mmxMessage.sendWithSuccess({ (invalidUsers) -> Void in
-            self.finishSendingMessageAnimated(true)
-        }) { (error) -> Void in
-            print(error)
-        }
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = false
+        imagePicker.sourceType = .PhotoLibrary
+        
+        presentViewController(imagePicker, animated: true, completion: nil)
     }
     
     private func addVideoMediaMessage() {
@@ -432,7 +425,7 @@ class ChatViewController: JSQMessagesViewController {
             "type": MessageType.Video.rawValue,
         ]
         
-        let mmxMessage = MMXMessage(toChannel: self.chat!, messageContent: messageContent)
+        let mmxMessage = MMXMessage(toChannel: chat!, messageContent: messageContent)
         let videoName = "small"
         let videoType = "mp4"
         let videoPath = NSBundle.mainBundle().pathForResource(videoName, ofType: videoType)
@@ -456,4 +449,34 @@ class ChatViewController: JSQMessagesViewController {
         }
     }
 
+}
+
+extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            
+            JSQSystemSoundPlayer.jsq_playMessageSentSound()
+            
+            let messageContent = ["type" : MessageType.Photo.rawValue]
+            let mmxMessage = MMXMessage(toChannel: chat!, messageContent: messageContent)
+            if let data = UIImagePNGRepresentation(pickedImage) {
+            
+                let attachment = MMAttachment(data: data, mimeType: "image/*")
+                mmxMessage.addAttachment(attachment)
+                mmxMessage.sendWithSuccess({ (invalidUsers) -> Void in
+                    self.finishSendingMessageAnimated(true)
+                }) { (error) -> Void in
+                    print(error)
+                }
+            }
+            
+        }
+        
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
 }

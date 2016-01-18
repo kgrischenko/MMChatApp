@@ -9,7 +9,7 @@
 import UIKit
 import MagnetMax
 
-class RegisterViewController : BaseViewController, UITextFieldDelegate {
+class RegisterViewController : BaseViewController {
     
     @IBOutlet weak var txtfFirstName : UITextField!
     @IBOutlet weak var txtfLastName : UITextField!
@@ -21,12 +21,6 @@ class RegisterViewController : BaseViewController, UITextFieldDelegate {
     
     var viewOffset: CGFloat!
     var keyboardIsShowing = false
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
     
     override func viewWillAppear(animated:Bool) {
         super.viewWillAppear(animated)
@@ -151,6 +145,7 @@ class RegisterViewController : BaseViewController, UITextFieldDelegate {
         }, failure: { [weak self] error  in
             self?.hideLoadingIndicator()
             print("[ERROR]: \(error.localizedDescription)")
+            self?.showAlert(error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close")
         })
     }
     
@@ -161,14 +156,6 @@ class RegisterViewController : BaseViewController, UITextFieldDelegate {
         UIView.animateWithDuration(0.3, animations: {
             self.view.frame = CGRectOffset(self.view.frame, 0, movement)
         })
-    }
-    
-    //MARK: UITextField delegate
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        
-        return true
     }
 
 }

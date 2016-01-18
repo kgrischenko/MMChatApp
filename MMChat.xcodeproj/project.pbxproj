@@ -35,6 +35,7 @@
 		8BA6E34C1C3D94380095F65F /* messages.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BA6E34B1C3D94380095F65F /* messages.png */; };
 		8BDF49DA1C32FD5500F0E51B /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BDF49D91C32FD5500F0E51B /* SWRevealViewController.m */; };
 		8BEAF9871C47B999006728E8 /* PubSubItemChannelMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEAF9861C47B999006728E8 /* PubSubItemChannelMessage.swift */; };
+		8BF254C01C49697A008719AA /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF254BF1C49697A008719AA /* Popup.swift */; };
 		C9BF0143BBC1E4E412BF8629 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6622CC48F4FE90AA03DBE8F9 /* Pods.framework */; };
 /* End PBXBuildFile section */
 
@@ -84,6 +85,7 @@
 		8BDF49D81C32FD5500F0E51B /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		8BDF49D91C32FD5500F0E51B /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		8BEAF9861C47B999006728E8 /* PubSubItemChannelMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PubSubItemChannelMessage.swift; sourceTree = "<group>"; };
+		8BF254BF1C49697A008719AA /* Popup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 		9B1845AFF91157CEDCC1D6E3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D530003B360E31447A1F6A63 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -279,6 +281,7 @@
 		8B8E802F1C2ACA1F008D8C43 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				8BF254BE1C496951008719AA /* Popup */,
 				8BDF49D71C32FD5500F0E51B /* SWRevealViewController */,
 			);
 			path = Helpers;
@@ -315,6 +318,14 @@
 				8BDF49D91C32FD5500F0E51B /* SWRevealViewController.m */,
 			);
 			path = SWRevealViewController;
+			sourceTree = "<group>";
+		};
+		8BF254BE1C496951008719AA /* Popup */ = {
+			isa = PBXGroup;
+			children = (
+				8BF254BF1C49697A008719AA /* Popup.swift */,
+			);
+			path = Popup;
 			sourceTree = "<group>";
 		};
 		E34B15ABF8CC1C3FB094E241 /* Pods */ = {
@@ -486,6 +497,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8BF254C01C49697A008719AA /* Popup.swift in Sources */,
 				8BDF49DA1C32FD5500F0E51B /* SWRevealViewController.m in Sources */,
 				8B81C1351C3C22CA00C186B6 /* DownloadManager.swift in Sources */,
 				8B0909A11C3AD5F20042F361 /* SummaryResponseCell.swift in Sources */,

@@ -21,12 +21,6 @@ class SignInViewController : BaseViewController {
         // Do any additional setup after loading the view.
     }
     
-    override func setConstrainsForActivityIndicator() {
-        let horizontalCenter = NSLayoutConstraint(item: activityIndicator, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let verticalPosition = NSLayoutConstraint(item: activityIndicator, attribute: .Top, relatedBy: .Equal, toItem: btnRemember, attribute: .Bottom, multiplier: 1, constant: 8)
-        self.view.addConstraints([horizontalCenter, verticalPosition])
-    }
-    
     @IBAction func signInAction() {
         
 //        self.performSegueWithIdentifier("showSlideMenuVC", sender: nil)

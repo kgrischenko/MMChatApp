@@ -14,12 +14,6 @@ class ChangePasswordViewController: BaseViewController {
     @IBOutlet weak var txtfCurrentPassword : UITextField!
     @IBOutlet weak var txtfNewPassword : UITextField!
     @IBOutlet weak var txtfNewPasswordAgain : UITextField!
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
     
     @IBAction func cancelAction() {
         self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
@@ -43,12 +37,16 @@ class ChangePasswordViewController: BaseViewController {
         updateRequest.tags = user.tags
         updateRequest.extras = user.extras
         updateRequest.password = newPassword
+        
+        self.showLoadingIndicator()
 
         MMUser.updateProfile(updateRequest, success: { [weak self] user in
+            self?.hideLoadingIndicator()
             self?.showAlert("Your password has been successfully changed", title: "Password Reset", closeTitle: "Continue", handler: { (_) -> Void in
                 self?.cancelAction()
             })
         }) { [weak self] error in
+            self?.hideLoadingIndicator()
             self?.showAlert("Either you entered the incorrect current password or your new password does not match", title: "Passwords do not match", closeTitle: "Try again")
         }
     }

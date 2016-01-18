@@ -8,31 +8,18 @@
 
 import UIKit
 
-class BaseViewController: UIViewController {
+class BaseViewController: UIViewController, UITextFieldDelegate {
     
-    let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        activityIndicator.hidesWhenStopped = true
-        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(activityIndicator)
-        
-        setConstrainsForActivityIndicator()
-    }
-    
-    func setConstrainsForActivityIndicator() {
-        let horizontalCenter = NSLayoutConstraint(item: activityIndicator, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let verticalCenter = NSLayoutConstraint(item: activityIndicator, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 0)
-        self.view.addConstraints([horizontalCenter, verticalCenter])
     }
     
     func showAlert(message :String, title :String, closeTitle :String, handler:((UIAlertAction) -> Void)? = nil) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        let closeAction = UIAlertAction(title: closeTitle, style: .Cancel, handler: handler)
-        alert.addAction(closeAction)
-        self.presentViewController(alert, animated: true, completion: nil)
+        let alert = Popup(message: message, title: title, closeTitle: closeTitle, handler: handler)
+        alert.presentForController(self)
     }
     
     func showLoadingIndicator() {
@@ -43,6 +30,14 @@ class BaseViewController: UIViewController {
     func hideLoadingIndicator() {
         activityIndicator.stopAnimating()
         self.view.userInteractionEnabled = true
+    }
+    
+    //MARK: UITextField delegate
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        
+        return true
     }
 
 }

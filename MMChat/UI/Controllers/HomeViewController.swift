@@ -89,10 +89,8 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
     // MARK: - Helpers
     
     private func isOwnerForChat(name: String) -> MMXChannel? {
-        if let channel = channelForName(name) {
-            if channel.ownerUserID == MMUser.currentUser()?.userID {
-                return channel
-            }
+        if let channel = channelForName(name) where channel.ownerUserID == MMUser.currentUser()?.userID {
+            return channel
         }
 
         return nil
@@ -181,8 +179,8 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showChatFromChannelSummary" {
             if let chatVC = segue.destinationViewController as? ChatViewController, let cell = sender as? SummaryResponseCell {
-                if let userInfos = cell.summaryResponse.subscribers as? [MMXUserInfo], messages = cell.summaryResponse.messages as? [MMXPubSubItemChannel] {
-                    chatVC.usersIDs = userInfos.map({ $0.userId })
+                if let messages = cell.summaryResponse.messages as? [MMXPubSubItemChannel] {
+                    chatVC.chat = channelForName(cell.summaryResponse.channelName)
                     chatVC.messages = messages.map({ PubSubItemChannelMessage(pubSubItemChannel: $0) })
                 }
             }
