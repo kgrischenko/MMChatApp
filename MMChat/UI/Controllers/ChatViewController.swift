@@ -227,6 +227,12 @@ class ChatViewController: JSQMessagesViewController {
         let mmxMessage = MMXMessage(toChannel: channel, messageContent: messageContent)
         mmxMessage.sendWithSuccess( { (invalidUsers) -> Void in
             self.finishSendingMessageAnimated(true)
+            
+            //send push notifications
+            self.recipients.forEach({ user in
+                let msg = MMXPushMessage.pushMessageWithRecipient(user, body: text)
+                msg.sendPushMessage(nil, failure: nil)
+            })
         }) { (error) -> Void in
             print(error)
         }

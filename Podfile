@@ -5,5 +5,5 @@ source 'https://github.com/magnetsystems/Specs'
 
 use_frameworks!
 
-pod 'MagnetMax', '~> 2.1.0'
+pod 'MagnetMax', '~> 2.3'
 pod 'JSQMessagesViewController'

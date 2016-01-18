@@ -25,6 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        MMXLogger.sharedLogger().level = .Verbose
 //        MMXLogger.sharedLogger().startLogging()
         
+        let settings = UIUserNotificationSettings(forTypes: [.Badge,.Alert,.Sound], categories: nil)
+        application.registerUserNotificationSettings(settings);
+        
         return true
     }
 
@@ -50,6 +53,29 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 
+    func application(application: UIApplication, didRegisterUserNotificationSettings notificationSettings: UIUserNotificationSettings) {
+        application.registerForRemoteNotifications()
+    }
+    
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        print("didFailToRegisterForRemoteNotificationsWithError \nCode = \(error.code) \nlocalizedDescription = \(error.localizedDescription) \nlocalizedFailureReason = \(error.localizedFailureReason)")
+    }
+    
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        MMDevice.updateCurentDeviceToken(deviceToken, success: { () -> Void in
+            print("Successfully updated device token")
+        }, failure:{ (error) -> Void in
+            print("Error updating device token. \(error)")
+        })
+    }
+    
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        if MMXRemoteNotification.isWakeupRemoteNotification(userInfo) {
+            //Send local notification to the user or connect via MMXUser logInWithCredential:success:failure:
+        } else if MMXRemoteNotification.isMMXRemoteNotification(userInfo) {
+            MMXRemoteNotification.acknowledgeRemoteNotification(userInfo, completion: nil)
+        }
+    }
 
 }
 
