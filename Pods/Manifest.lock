@@ -24,9 +24,9 @@ PODS:
   - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
-  - MagnetMax (2.3.0):
-    - MagnetMaxCore (~> 2.3)
-    - MMX (~> 2.3)
+  - MagnetMax (2.1.0):
+    - MagnetMaxCore (~> 2.1)
+    - MMX (~> 2.1)
   - MagnetMaxCore (2.3.0):
     - AFNetworking/NSURLConnection (= 2.6.1)
     - AFNetworking/NSURLSession (= 2.6.1)
@@ -89,7 +89,7 @@ PODS:
 
 DEPENDENCIES:
   - JSQMessagesViewController
-  - MagnetMax (~> 2.3)
+  - MagnetMax (~> 2.1.0)
 
 SPEC CHECKSUMS:
   AFNetworking: 8e4e60500beb8bec644cf575beee72990a76d399
@@ -98,11 +98,11 @@ SPEC CHECKSUMS:
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
-  MagnetMax: 79f226626b6759d02d13bf721594a8512d5df6b7
-  MagnetMaxCore: efc169604da3ad57ea0bfe174a98b65e8959e900
+  MagnetMax: f4a10797ae6c175b6b1e0b5a235cee08bac7e65a
+  MagnetMaxCore: e999c6d5187d9c67065c0444a4f08e5bc56676df
   Mantle: 3a019674ccd330eebf877e6cb81092b48483c36e
   MDMCoreData: 402f754cda90865026a209243f1667824e775649
-  MMX: 9d40a2af9baaedd075046384bded07d05f35522c
+  MMX: ca82f2f1667f3666d8a5d9e6b404e443e4cc6964
   MMXXMPPFramework: fd2c0a9450082cc25270bf9f8b1aec7b67e7a21e
 
 COCOAPODS: 0.39.0

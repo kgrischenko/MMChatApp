@@ -1,9 +1,9 @@
-source 'https://github.com/CocoaPods/Specs.git'
-source 'https://github.com/magnetsystems/Specs.git'
-source 'https://github.com/magnetsystems/iOS-Distribution.git'
+platform :ios, "8.0"
 
-platform :ios, '8.0'
+source 'https://github.com/CocoaPods/Specs'
+source 'https://github.com/magnetsystems/Specs'
+
 use_frameworks!
 
-pod 'MagnetMax', '~> 2.3'
+pod 'MagnetMax', '~> 2.1.0'
 pod 'JSQMessagesViewController'

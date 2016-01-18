@@ -9,10 +9,11 @@
 import UIKit
 import MagnetMax
 import JSQMessagesViewController
+import MobileCoreServices
 
 class ChatViewController: JSQMessagesViewController {
     
-    internal var chat : MMXChannel?
+    var chat : MMXChannel?
     var messages = [JSQMessageData]()
     var avatars = Dictionary<String, UIImage>()
     var outgoingBubbleImageView = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
@@ -75,6 +76,7 @@ class ChatViewController: JSQMessagesViewController {
                     print("[ERROR]: \(error)")
                 })
             } else {
+                //FIXME: temp solution
                 let info : AnyObject = channels
                 if let channelInfo = info as? [MMXChannelInfo] {
                     MMXChannel.channelForName(channelInfo.first!.name, isPublic: false, success: { [weak self] channel in
@@ -231,6 +233,8 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     override func didPressAccessoryButton(sender: UIButton!) {
+        
+        guard let _ = self.chat else { return }
         
         let alertController = UIAlertController(title: "Media messages", message: nil, preferredStyle: .Alert)
         
@@ -390,25 +394,25 @@ class ChatViewController: JSQMessagesViewController {
     // MARK: Helper methods
     
     private func addLocationMediaMessageCompletion() {
-        let ferryBuildingInSF = CLLocation(latitude: 37.795313, longitude: -122.393757)
         
-        JSQSystemSoundPlayer.jsq_playMessageSentSound()
-        
-        let messageContent = [
-            "type": MessageType.Location.rawValue,
-            "latitude": "\(ferryBuildingInSF.coordinate.latitude)",
-            "longitude": "\(ferryBuildingInSF.coordinate.longitude)"
-        ]
-        let mmxMessage = MMXMessage(toChannel: chat!, messageContent: messageContent)
-        mmxMessage.sendWithSuccess( { (invalidUsers) -> Void in
-            self.finishSendingMessageAnimated(true)
-        }) { (error) -> Void in
-            print(error)
+        LocationManager.sharedInstance.getLocation { [weak self] location in
+            JSQSystemSoundPlayer.jsq_playMessageSentSound()
+
+            let messageContent = [
+                "type": MessageType.Location.rawValue,
+                "latitude": "\(location.coordinate.latitude)",
+                "longitude": "\(location.coordinate.longitude)"
+            ]
+            let mmxMessage = MMXMessage(toChannel: (self?.chat)!, messageContent: messageContent)
+            mmxMessage.sendWithSuccess( { (invalidUsers) -> Void in
+                self?.finishSendingMessageAnimated(true)
+            }) { (error) -> Void in
+                print(error)
+            }
         }
     }
     
     private func addPhotoMediaMessage() {
-        
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.allowsEditing = false
@@ -418,25 +422,12 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     private func addVideoMediaMessage() {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .PhotoLibrary
+        imagePicker.mediaTypes = [kUTTypeMovie as String]
         
-        JSQSystemSoundPlayer.jsq_playMessageSentSound()
-        
-        let messageContent = [
-            "type": MessageType.Video.rawValue,
-        ]
-        
-        let mmxMessage = MMXMessage(toChannel: chat!, messageContent: messageContent)
-        let videoName = "small"
-        let videoType = "mp4"
-        let videoPath = NSBundle.mainBundle().pathForResource(videoName, ofType: videoType)
-        let urlPath = NSURL(fileURLWithPath: videoPath!)
-        let attachment = MMAttachment(fileURL: urlPath, mimeType: "video/*", name: "Lego", description: "small video")
-        mmxMessage.addAttachment(attachment)
-        mmxMessage.sendWithSuccess({ (invalidUsers) -> Void in
-            self.finishSendingMessageAnimated(true)
-        }) { (error) -> Void in
-            print(error)
-        }
+        presentViewController(imagePicker, animated: true, completion: nil)
     }
     
     // MARK: - Navigation
@@ -454,9 +445,10 @@ class ChatViewController: JSQMessagesViewController {
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+
+        JSQSystemSoundPlayer.jsq_playMessageSentSound()
+
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            
-            JSQSystemSoundPlayer.jsq_playMessageSentSound()
             
             let messageContent = ["type" : MessageType.Photo.rawValue]
             let mmxMessage = MMXMessage(toChannel: chat!, messageContent: messageContent)
@@ -470,7 +462,16 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
                     print(error)
                 }
             }
-            
+        } else if let urlOfVideo = info[UIImagePickerControllerMediaURL] as? NSURL {
+            let messageContent = ["type" : MessageType.Video.rawValue]
+            let mmxMessage = MMXMessage(toChannel: chat!, messageContent: messageContent)
+            let attachment = MMAttachment(fileURL: urlOfVideo, mimeType: "video/*")
+            mmxMessage.addAttachment(attachment)
+            mmxMessage.sendWithSuccess({ (invalidUsers) -> Void in
+                self.finishSendingMessageAnimated(true)
+            }) { (error) -> Void in
+                print(error)
+            }
         }
         
         dismissViewControllerAnimated(true, completion: nil)

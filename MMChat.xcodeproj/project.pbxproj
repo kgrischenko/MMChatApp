@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A1795E41C4D39140038596D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1795E31C4D39140038596D /* LocationManager.swift */; };
 		8B09099C1C3A92870042F361 /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B09099B1C3A92870042F361 /* ChangePasswordViewController.swift */; };
 		8B09099E1C3AB5C60042F361 /* new_message@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B09099D1C3AB5C60042F361 /* new_message@2x.png */; };
 		8B0909A11C3AD5F20042F361 /* SummaryResponseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0909A01C3AD5F20042F361 /* SummaryResponseCell.swift */; };
@@ -50,6 +51,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3A1795E31C4D39140038596D /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		6622CC48F4FE90AA03DBE8F9 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B09099B1C3A92870042F361 /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		8B09099D1C3AB5C60042F361 /* new_message@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new_message@2x.png"; sourceTree = "<group>"; };
@@ -230,6 +232,7 @@
 			isa = PBXGroup;
 			children = (
 				8B81C1341C3C22CA00C186B6 /* DownloadManager.swift */,
+				3A1795E31C4D39140038596D /* LocationManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -390,7 +393,7 @@
 				TargetAttributes = {
 					8B2E53C91C2AC31900C9AC47 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = X3HK4J9ZMC;
+						DevelopmentTeam = KLN56Z77A4;
 					};
 					8B2E53DD1C2AC31900C9AC47 = {
 						CreatedOnToolsVersion = 7.2;
@@ -514,6 +517,7 @@
 				8B8E803C1C2AE733008D8C43 /* RegisterViewController.swift in Sources */,
 				8B8E80331C2ACAC8008D8C43 /* BaseViewController.swift in Sources */,
 				8B8E80351C2ACB15008D8C43 /* SignInViewController.swift in Sources */,
+				3A1795E41C4D39140038596D /* LocationManager.swift in Sources */,
 				8B81C1321C3C21D800C186B6 /* Message.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
