@@ -51,10 +51,27 @@ class PubSubItemChannelMessage: NSObject, JSQMessageData {
     }
 
     func senderDisplayName() -> String! {
-        return underlyingMessage.publisherInfo.displayName
+        if let displayName = underlyingMessage.publisherInfo.displayName {
+            return displayName
+        } else {
+            if let summary = ChannelManager.sharedInstance.channelSummaryForChannelName(underlyingMessage.channelName) {
+                if let subscribers = summary.subscribers as? [MMXUserInfo] {
+                    for user in subscribers {
+                        if underlyingMessage.publisher.userId == user.userId {
+                            return user.displayName
+                        }
+                    }
+                }
+            }
+        }
+        
+        return "Uknown sender"
     }
 
     func date() -> NSDate! {
+        if let date = ChannelManager.sharedInstance.dateForLastPublishedTime(underlyingMessage.metaData.creationDate!) {
+            return date
+        }
         return NSDate()
     }
 

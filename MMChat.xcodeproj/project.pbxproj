@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3A1795E41C4D39140038596D /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A1795E31C4D39140038596D /* LocationManager.swift */; };
+		8B0760381C4E5D9A00EAC402 /* ChannelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0760371C4E5D9A00EAC402 /* ChannelManager.swift */; };
 		8B09099C1C3A92870042F361 /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B09099B1C3A92870042F361 /* ChangePasswordViewController.swift */; };
 		8B09099E1C3AB5C60042F361 /* new_message@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B09099D1C3AB5C60042F361 /* new_message@2x.png */; };
 		8B0909A11C3AD5F20042F361 /* SummaryResponseCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B0909A01C3AD5F20042F361 /* SummaryResponseCell.swift */; };
@@ -53,6 +54,7 @@
 /* Begin PBXFileReference section */
 		3A1795E31C4D39140038596D /* LocationManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		6622CC48F4FE90AA03DBE8F9 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8B0760371C4E5D9A00EAC402 /* ChannelManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelManager.swift; sourceTree = "<group>"; };
 		8B09099B1C3A92870042F361 /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		8B09099D1C3AB5C60042F361 /* new_message@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new_message@2x.png"; sourceTree = "<group>"; };
 		8B0909A01C3AD5F20042F361 /* SummaryResponseCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SummaryResponseCell.swift; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 			children = (
 				8B81C1341C3C22CA00C186B6 /* DownloadManager.swift */,
 				3A1795E31C4D39140038596D /* LocationManager.swift */,
+				8B0760371C4E5D9A00EAC402 /* ChannelManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -511,6 +514,7 @@
 				8B223F4B1C33099B0096D204 /* HomeViewController.swift in Sources */,
 				8BEAF9871C47B999006728E8 /* PubSubItemChannelMessage.swift in Sources */,
 				8B3EBB5F1C3BE0F400BAED8E /* RearMenuViewController.swift in Sources */,
+				8B0760381C4E5D9A00EAC402 /* ChannelManager.swift in Sources */,
 				8B2E53CE1C2AC31900C9AC47 /* AppDelegate.swift in Sources */,
 				8B81C12E1C3C1E5600C186B6 /* ChatViewController.swift in Sources */,
 				8B6AA87D1C3C3BB100DE3C42 /* DetailsViewController.swift in Sources */,

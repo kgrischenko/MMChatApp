@@ -15,10 +15,9 @@ class SignInViewController : BaseViewController {
     @IBOutlet weak var txtfPassword : UITextField!
     @IBOutlet weak var btnRemember : UISwitch!
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        txtfPassword.text = ""
     }
     
     @IBAction func signInAction() {

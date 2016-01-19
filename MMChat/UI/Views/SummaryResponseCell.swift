@@ -28,7 +28,7 @@ class SummaryResponseCell: UITableViewCell {
                 lblSubscribers.text = subscribersTitle
             }
             if let messages = summaryResponse.messages as? [MMXPubSubItemChannel], content = messages.last?.content as! [String : String]! {
-                lblMessage.text = content["message"]!
+                lblMessage.text = content["message"] ?? "Attachment file"
             }
             
             lblLastTime.text = displayLastPublishedTime()
@@ -58,10 +58,10 @@ class SummaryResponseCell: UITableViewCell {
     
     private func displayLastPublishedTime() -> String! {
         let secondsInDay: NSTimeInterval = 24 * 60 * 60
-        let lastDay = NSDate(timeInterval: secondsInDay, sinceDate: NSDate())
+        let yesturday = NSDate(timeInterval: -secondsInDay, sinceDate: NSDate())
         
         if let lastPublishedTime = dateForLastPublishedTime() {
-            let result = lastDay.compare(lastPublishedTime)
+            let result = yesturday.compare(lastPublishedTime)
             if result == .OrderedAscending {
                 return JSQMessagesTimestampFormatter.sharedFormatter().timeForDate(lastPublishedTime)
             } else {
@@ -73,9 +73,7 @@ class SummaryResponseCell: UITableViewCell {
     }
     
     private func dateForLastPublishedTime() -> NSDate? {
-        let formatter = JSQMessagesTimestampFormatter.sharedFormatter().dateFormatter
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        return formatter.dateFromString(summaryResponse.lastPublishedTime)
+        return ChannelManager.sharedInstance.dateForLastPublishedTime(summaryResponse.lastPublishedTime!)
     }
 
 }

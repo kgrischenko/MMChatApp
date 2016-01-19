@@ -13,11 +13,17 @@ import MobileCoreServices
 
 class ChatViewController: JSQMessagesViewController {
     
-    var chat : MMXChannel?
     var messages = [JSQMessageData]()
     var avatars = Dictionary<String, UIImage>()
     var outgoingBubbleImageView = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
     var incomingBubbleImageView = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
+    
+    var chat : MMXChannel? {
+        didSet {
+            loadMessages()
+        }
+    }
+    
     var recipients : [MMUser]! {
         didSet {
             if recipients.count == 2 {
@@ -40,19 +46,20 @@ class ChatViewController: JSQMessagesViewController {
             return
         }
         
-        senderId = user.userName
+        senderId = user.userID
         senderDisplayName = user.firstName
 //        showLoadEarlierMessagesHeader = true
         collectionView!.collectionViewLayout.incomingAvatarViewSize = CGSizeZero;
         collectionView!.collectionViewLayout.outgoingAvatarViewSize = CGSizeZero;
         
-        // Find channel by usersIDs or users
+        // Find recipients
         if chat != nil {
             chat?.subscribersWithLimit(100, offset: 0, success: { [weak self] (count, users) -> Void in
                 self?.recipients = users
             }, failure: { (error) -> Void in
                 print("[ERROR]: \(error)")
             })
+            loadMessages()
         } else if recipients != nil {
             self.findChannelsBySubscribers(recipients)
         }
@@ -66,24 +73,22 @@ class ChatViewController: JSQMessagesViewController {
                 let subscribers = Set(users)
                 
                 // Set channel name
-                let formatter = JSQMessagesTimestampFormatter.sharedFormatter().dateFormatter
-                formatter.dateFormat = "yyyyMMddHHmmss"
-                let name = "\(self!.senderId)_\(formatter.stringFromDate(NSDate()))"
+                let name = "\(self!.senderDisplayName)_\(ChannelManager.sharedInstance.newChannelName())"
                 
                 MMXChannel.createWithName(name, summary: "\(self!.senderDisplayName) private chat", isPublic: false, publishPermissions: .Subscribers, subscribers: subscribers, success: { channel in
                     self?.chat = channel
                 }, failure: { error in
                     print("[ERROR]: \(error)")
+                    let alert = Popup(message: error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close", handler: { _ in
+                        self?.navigationController?.popViewControllerAnimated(true)
+                    })
+                    alert.presentForController(self!)
                 })
-            } else {
+            } else if channels.count == 1 {
                 //FIXME: temp solution
                 let info : AnyObject = channels
                 if let channelInfo = info as? [MMXChannelInfo] {
-                    MMXChannel.channelForName(channelInfo.first!.name, isPublic: false, success: { [weak self] channel in
-                        self?.chat = channel
-                    }, failure: { (error) -> Void in
-                        print("[ERROR]: \(error)")
-                    })
+                    self?.chat = ChannelManager.sharedInstance.channelForName(channelInfo.first!.name)
                 }
                 
                 //Use existing
@@ -92,7 +97,7 @@ class ChatViewController: JSQMessagesViewController {
         }) { error in
             print("[ERROR]: \(error)")
             let alert = Popup(message: error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close", handler: { _ in
-//                self.navigationController?.popViewControllerAnimated(true)
+                self.navigationController?.popViewControllerAnimated(true)
             })
             alert.presentForController(self)
         }
@@ -126,27 +131,25 @@ class ChatViewController: JSQMessagesViewController {
             return
         }
         
-        let allSubscribers = Set(newSubscribers + self.recipients)
-        
-        let addSubscribers = {(subcribers: [MMUser]) -> Void in
-            self.chat?.addSubscribers(subcribers, success: { invalidUsers in
-                print(invalidUsers)
-            }, failure: { error in
-                print("[ERROR]: can't add subscribers - \(error)")
-            })
-        }
+        let allSubscribers = Array(Set(newSubscribers + self.recipients))
         
         //Check if channel exists
-        MMXChannel.findChannelsBySubscribers(Array(allSubscribers), matchType: .EXACT_MATCH, success: { channels in
+        MMXChannel.findChannelsBySubscribers(allSubscribers, matchType: .EXACT_MATCH, success: { [weak self] channels in
             if channels.count == 1 {
-                // Delete old chat and continue to use current with new subscribers
-                channels.first!.deleteWithSuccess({ () -> Void in
-                    addSubscribers(newSubscribers)
-                }, failure: { error in
-                    print("[ERROR]: \(error)")
-                })
+                //FIXME: temporary solution
+                let channelInfos : AnyObject = channels
+                if let channelInfo = channelInfos as? [MMXChannelInfo] {
+                    // Use existing channel
+                    self?.chat = ChannelManager.sharedInstance.channelForName(channelInfo.first!.name)
+                    self?.recipients = allSubscribers
+                }
             } else if channels.count == 0 {
-                addSubscribers(newSubscribers)
+                self?.chat?.addSubscribers(newSubscribers, success: { invalidUsers in
+                    self?.recipients = allSubscribers
+                    print(invalidUsers)
+                }, failure: { error in
+                    print("[ERROR]: can't add subscribers - \(error)")
+                })
             }
         }, failure: { error in
             print("[ERROR]: \(error)")
@@ -211,7 +214,7 @@ class ChatViewController: JSQMessagesViewController {
         })
     }
     
-    //MARK: - everriden JSQMessagesViewController methods
+    //MARK: - overriden JSQMessagesViewController methods
     
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
         
@@ -227,12 +230,6 @@ class ChatViewController: JSQMessagesViewController {
         let mmxMessage = MMXMessage(toChannel: channel, messageContent: messageContent)
         mmxMessage.sendWithSuccess( { (invalidUsers) -> Void in
             self.finishSendingMessageAnimated(true)
-            
-            //send push notifications
-            self.recipients.forEach({ user in
-                let msg = MMXPushMessage.pushMessageWithRecipient(user, body: text)
-                msg.sendPushMessage(nil, failure: nil)
-            })
         }) { (error) -> Void in
             print(error)
         }
@@ -440,10 +437,31 @@ class ChatViewController: JSQMessagesViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showDetailsSegue" {
-            if let destinationVC = segue.destinationViewController as? DetailsViewController {
-                destinationVC.recipients = recipients
+            if let detailVC = segue.destinationViewController as? DetailsViewController {
+                detailVC.recipients = recipients
+                detailVC.channel = chat
             }
         }
+    }
+    
+    private func loadMessages() {
+        
+        guard let channel = self.chat else { return }
+        
+        let dateComponents = NSDateComponents()
+        dateComponents.day = -1
+        
+        let theCalendar = NSCalendar.currentCalendar()
+        let now = NSDate()
+        let dayAgo = theCalendar.dateByAddingComponents(dateComponents, toDate: now, options: NSCalendarOptions(rawValue: 0))
+        
+        channel.messagesBetweenStartDate(dayAgo, endDate: now, limit: 100, offset: 0, ascending: true, success: { totalCount, messages in
+            let messages = messages.map({ Message(message: $0) })
+            self.messages = messages
+            self.collectionView?.reloadData()
+        }, failure: { error in
+            print(error)
+        })
     }
 
 }

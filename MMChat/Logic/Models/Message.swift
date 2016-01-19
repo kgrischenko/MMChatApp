@@ -49,7 +49,7 @@ class Message : NSObject, JSQMessageData {
     }
     
     func senderId() -> String! {
-        return underlyingMessage.sender!.userName
+        return underlyingMessage.sender!.userID
     }
     
     func senderDisplayName() -> String! {

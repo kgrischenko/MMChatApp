@@ -48,16 +48,19 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
         
         // Get all channels the current user is subscribed to
         MMXChannel.subscribedChannelsWithSuccess({ [weak self] channels in
+            ChannelManager.sharedInstance.channels = channels
             self?.subscribedChannels = channels
             // Get summaries
             let channelsSet = Set(channels)
-            MMXChannel.channelSummary(channelsSet, numberOfMessages: 5, numberOfSubcribers: 5, success: {  summaryResponses in
+            MMXChannel.channelSummary(channelsSet, numberOfMessages: 10, numberOfSubcribers: 10, success: { summaryResponses in
+                ChannelManager.sharedInstance.channelSummaries = summaryResponses
                 self?.summaryResponses = summaryResponses
                 self?.tableView.reloadData()
             }, failure: { error in
                 print(error)
             })
-        }) { error in
+        }) { [weak self] error in
+            self?.tableView.reloadData()
             print(error)
         }
     }
@@ -89,20 +92,10 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
     // MARK: - Helpers
     
     private func isOwnerForChat(name: String) -> MMXChannel? {
-        if let channel = channelForName(name) where channel.ownerUserID == MMUser.currentUser()?.userID {
+        if let channel = ChannelManager.sharedInstance.channelForName(name) where channel.ownerUserID == MMUser.currentUser()?.userID {
             return channel
         }
 
-        return nil
-    }
-    
-    private func channelForName(name: String) -> MMXChannel? {
-        for channel in subscribedChannels {
-            if channel.name == name {
-                return channel
-            }
-        }
-        
         return nil
     }
 
@@ -128,7 +121,10 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
     
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let summaryResponse = summaryResponses[indexPath.row]
-        let isLastPersonInChat = (summaryResponse.messages.last as! MMXPubSubItemChannel).publisher.userId == MMUser.currentUser()?.userID
+        var isLastPersonInChat = false
+        if summaryResponse.messages.count > 0 {
+            isLastPersonInChat = (summaryResponse.messages.last as! MMXPubSubItemChannel).publisher.userId == MMUser.currentUser()?.userID
+        }
         
         if isLastPersonInChat {
             // Current user must be the owner of the channel to delete it
@@ -148,7 +144,7 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
         
         // Unsubscribe
         let leave = UITableViewRowAction(style: .Normal, title: "Leave") { [weak self] action, index in
-            if let chat = self?.channelForName(summaryResponse.channelName) {
+            if let chat = ChannelManager.sharedInstance.channelForName(summaryResponse.channelName) {
                 chat.unSubscribeWithSuccess({ _ in
                     self?.summaryResponses.removeAtIndex(index.row)
                     tableView.deleteRowsAtIndexPaths([index], withRowAnimation: .Fade)
@@ -179,10 +175,7 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showChatFromChannelSummary" {
             if let chatVC = segue.destinationViewController as? ChatViewController, let cell = sender as? SummaryResponseCell {
-                if let messages = cell.summaryResponse.messages as? [MMXPubSubItemChannel] {
-                    chatVC.chat = channelForName(cell.summaryResponse.channelName)
-                    chatVC.messages = messages.map({ PubSubItemChannelMessage(pubSubItemChannel: $0) })
-                }
+                chatVC.chat = ChannelManager.sharedInstance.channelForName(cell.summaryResponse.channelName)
             }
         } else if segue.identifier == "showContactsSelector" {
             if let navigationVC = segue.destinationViewController as? UINavigationController {
