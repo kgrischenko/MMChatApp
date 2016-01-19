@@ -49,8 +49,15 @@ class SummaryResponseCell: UITableViewCell {
     private func hasNewMessagesFromLastTime() -> Bool {
         if let lastViewTime = NSUserDefaults.standardUserDefaults().objectForKey(summaryResponse.channelName) as? NSDate {
             if let lastPublishedTime = dateForLastPublishedTime() {
-                return lastPublishedTime.timeIntervalSince1970 > lastViewTime.timeIntervalSince1970
+                let result = lastViewTime.compare(lastPublishedTime)
+                if result == .OrderedAscending {
+                    return true
+                } else {
+                    return false
+                }
             }
+        } else if summaryResponse.messages.count > 0 {
+            return true
         }
         
         return false

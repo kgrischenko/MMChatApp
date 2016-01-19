@@ -113,9 +113,6 @@ class ChatViewController: JSQMessagesViewController {
         super.viewWillDisappear(animated)
         
         NSNotificationCenter.defaultCenter().removeObserver(self)
-    }
-    
-    deinit {
         // Save last channel view time
         if let _ = chat {
             NSUserDefaults.standardUserDefaults().setObject(NSDate(), forKey: chat!.name)

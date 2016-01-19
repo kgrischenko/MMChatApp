@@ -44,6 +44,14 @@ class ChannelManager: NSObject {
         return nil
     }
     
+    func isOwnerForChat(name: String) -> MMXChannel? {
+        if let channel = channelForName(name) where channel.ownerUserID == MMUser.currentUser()?.userID {
+            return channel
+        }
+        
+        return nil
+    }
+    
     func dateForLastPublishedTime(stringTime: String) -> NSDate? {
         var date = stringTime
         if date.containsString(".") {
@@ -75,10 +83,12 @@ class ChannelManager: NSObject {
         return "\(fakeTimestamp)"
     }
     
-    
+    // MARK: - Private implementation
     
     private override init() {
         super.init()
+        formatter.locale = NSLocale.currentLocale()
+        formatter.timeZone = NSTimeZone(name: "GMT")
     }
     
     private let formatter = NSDateFormatter()

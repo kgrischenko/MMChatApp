@@ -88,16 +88,6 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
             revealVC.rearViewController.navigationController?.popToRootViewControllerAnimated(true)
         }
     }
-    
-    // MARK: - Helpers
-    
-    private func isOwnerForChat(name: String) -> MMXChannel? {
-        if let channel = ChannelManager.sharedInstance.channelForName(name) where channel.ownerUserID == MMUser.currentUser()?.userID {
-            return channel
-        }
-
-        return nil
-    }
 
     // MARK: - Table view data source
 
@@ -128,7 +118,7 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
         
         if isLastPersonInChat {
             // Current user must be the owner of the channel to delete it
-            if let chat = isOwnerForChat(summaryResponse.channelName) {
+            if let chat = ChannelManager.sharedInstance.isOwnerForChat(summaryResponse.channelName) {
                 let delete = UITableViewRowAction(style: .Normal, title: "Delete") { [weak self] action, index in
                     chat.deleteWithSuccess({ _ in
                         self?.summaryResponses.removeAtIndex(index.row)
@@ -194,7 +184,9 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
             if let pubSubItems = summary.messages as? [MMXPubSubItemChannel] {
                 for message in pubSubItems {
                     let content = message.content as! [String : String]!
-                    return content["message"]!.containsString(searchController.searchBar.text!.lowercaseString)
+                    if let text = content["message"] {
+                        return text.containsString(searchController.searchBar.text!.lowercaseString)
+                    }
                 }
             }
             
