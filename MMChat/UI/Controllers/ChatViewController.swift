@@ -174,39 +174,7 @@ class ChatViewController: JSQMessagesViewController {
             self.finishReceivingMessageAnimated(true)
             
             if message.isMediaMessage() {
-                
-                switch message.type {
-                case .Text:
-                    print("Text")
-                case .Location:
-                    let location = CLLocation(latitude: (mmxMessage.messageContent["latitude"]! as NSString).doubleValue, longitude: (mmxMessage.messageContent["longitude"]! as NSString).doubleValue)
-                    let locationMediaItem = JSQLocationMediaItem()
-                    locationMediaItem.setLocation(location) {
-                        self.collectionView?.reloadData()
-                    }
-                    message.mediaContent = locationMediaItem
-                case .Photo:
-                    let attachment = mmxMessage.attachments?.first
-                    attachment?.downloadFileWithSuccess({ (fileURL) -> Void in
-                        let image = UIImage(contentsOfFile: fileURL.path!)
-                        let photo = JSQPhotoMediaItem(image: image)
-                        message.mediaContent = photo
-                        self.collectionView?.reloadData()
-                        print("Did load image")
-                    }, failure: { (error) -> Void in
-                        print(error)
-                    })
-                    
-                case .Video:
-                    let attachment = mmxMessage.attachments?.first
-                    attachment?.downloadFileWithSuccess({ (fileURL) -> Void in
-                        let video = JSQVideoMediaItem(fileURL: fileURL, isReadyToPlay: true)
-                        message.mediaContent = video
-                        self.collectionView?.reloadData()
-                    }, failure: { (error) -> Void in
-                        print(error)
-                    })
-                }
+                message.mediaCompletionBlock = { [weak self] in self?.collectionView?.reloadData() }
             }
         })
     }
@@ -332,6 +300,8 @@ class ChatViewController: JSQMessagesViewController {
                 NSForegroundColorAttributeName : cell.textView?.textColor as! AnyObject,
                 NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue | NSUnderlineStyle.PatternSolid.rawValue
             ]
+        } else {
+            
         }
         
         return cell
@@ -453,10 +423,9 @@ class ChatViewController: JSQMessagesViewController {
         let dayAgo = theCalendar.dateByAddingComponents(dateComponents, toDate: now, options: NSCalendarOptions(rawValue: 0))
         
         channel.messagesBetweenStartDate(dayAgo, endDate: now, limit: 100, offset: 0, ascending: true, success: { totalCount, messages in
-            let messages = messages.map({ Message(message: $0) })
-            self.messages = messages
+            self.messages = messages.map({ Message(message: $0) })
             self.collectionView?.reloadData()
-            self.scrollToBottomAnimated(true)
+            self.scrollToBottomAnimated(false)
         }, failure: { error in
             print(error)
         })
