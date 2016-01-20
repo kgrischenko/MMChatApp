@@ -36,7 +36,6 @@
 		8B8E803C1C2AE733008D8C43 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E803B1C2AE733008D8C43 /* RegisterViewController.swift */; };
 		8BA6E34C1C3D94380095F65F /* messages.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BA6E34B1C3D94380095F65F /* messages.png */; };
 		8BDF49DA1C32FD5500F0E51B /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BDF49D91C32FD5500F0E51B /* SWRevealViewController.m */; };
-		8BEAF9871C47B999006728E8 /* PubSubItemChannelMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BEAF9861C47B999006728E8 /* PubSubItemChannelMessage.swift */; };
 		8BF254C01C49697A008719AA /* Popup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BF254BF1C49697A008719AA /* Popup.swift */; };
 		C9BF0143BBC1E4E412BF8629 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6622CC48F4FE90AA03DBE8F9 /* Pods.framework */; };
 /* End PBXBuildFile section */
@@ -88,7 +87,6 @@
 		8BA6E34B1C3D94380095F65F /* messages.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messages.png; sourceTree = "<group>"; };
 		8BDF49D81C32FD5500F0E51B /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		8BDF49D91C32FD5500F0E51B /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
-		8BEAF9861C47B999006728E8 /* PubSubItemChannelMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PubSubItemChannelMessage.swift; sourceTree = "<group>"; };
 		8BF254BF1C49697A008719AA /* Popup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Popup.swift; sourceTree = "<group>"; };
 		9B1845AFF91157CEDCC1D6E3 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		D530003B360E31447A1F6A63 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -225,7 +223,6 @@
 			isa = PBXGroup;
 			children = (
 				8B81C1311C3C21D800C186B6 /* Message.swift */,
-				8BEAF9861C47B999006728E8 /* PubSubItemChannelMessage.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -396,7 +393,7 @@
 				TargetAttributes = {
 					8B2E53C91C2AC31900C9AC47 = {
 						CreatedOnToolsVersion = 7.2;
-						DevelopmentTeam = KLN56Z77A4;
+						DevelopmentTeam = X3HK4J9ZMC;
 					};
 					8B2E53DD1C2AC31900C9AC47 = {
 						CreatedOnToolsVersion = 7.2;
@@ -512,7 +509,6 @@
 				8B09099C1C3A92870042F361 /* ChangePasswordViewController.swift in Sources */,
 				8B3EBB611C3BF80300BAED8E /* ContactsViewController.swift in Sources */,
 				8B223F4B1C33099B0096D204 /* HomeViewController.swift in Sources */,
-				8BEAF9871C47B999006728E8 /* PubSubItemChannelMessage.swift in Sources */,
 				8B3EBB5F1C3BE0F400BAED8E /* RearMenuViewController.swift in Sources */,
 				8B0760381C4E5D9A00EAC402 /* ChannelManager.swift in Sources */,
 				8B2E53CE1C2AC31900C9AC47 /* AppDelegate.swift in Sources */,
@@ -655,7 +651,7 @@
 				INFOPLIST_FILE = MMChat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.magnet.MMChat;
+				PRODUCT_BUNDLE_IDENTIFIER = com.magnet.iOS.MMChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MMChat/MMChat-Bridging-Header.h";
@@ -672,7 +668,7 @@
 				INFOPLIST_FILE = MMChat/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.magnet.MMChat;
+				PRODUCT_BUNDLE_IDENTIFIER = com.magnet.iOS.MMChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "MMChat/MMChat-Bridging-Header.h";

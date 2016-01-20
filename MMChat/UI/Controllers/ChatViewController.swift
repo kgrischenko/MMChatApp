@@ -456,6 +456,7 @@ class ChatViewController: JSQMessagesViewController {
             let messages = messages.map({ Message(message: $0) })
             self.messages = messages
             self.collectionView?.reloadData()
+            self.scrollToBottomAnimated(true)
         }, failure: { error in
             print(error)
         })

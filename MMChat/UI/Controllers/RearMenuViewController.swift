@@ -39,6 +39,7 @@ class RearMenuViewController: UITableViewController {
                 print("[ERROR]: \(error)")
             })
         }
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
 
 

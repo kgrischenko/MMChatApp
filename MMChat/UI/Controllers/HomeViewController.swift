@@ -46,28 +46,16 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
             self.title = "\(user.firstName ?? "") \(user.lastName ?? "")"
         }
         
-        // Get all channels the current user is subscribed to
-        MMXChannel.subscribedChannelsWithSuccess({ [weak self] channels in
-            ChannelManager.sharedInstance.channels = channels
-            self?.subscribedChannels = channels
-            // Get summaries
-            let channelsSet = Set(channels)
-            MMXChannel.channelSummary(channelsSet, numberOfMessages: 10, numberOfSubcribers: 10, success: { summaryResponses in
-                ChannelManager.sharedInstance.channelSummaries = summaryResponses
-                self?.summaryResponses = summaryResponses
-                self?.tableView.reloadData()
-            }, failure: { error in
-                print(error)
-            })
-        }) { [weak self] error in
-            self?.tableView.reloadData()
-            print(error)
-        }
+        loadSummaries()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         self.title = nil
+    }
+    
+    @IBAction func refreshChannelSummary() {
+        loadSummaries()
     }
     
     deinit {
@@ -92,7 +80,7 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
     // MARK: - Table view data source
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if searchController.active && searchController.searchBar.text != "" {
+        if searchController.active {
             return filteredSummaryResponses.count
         }
         return summaryResponses.count
@@ -179,13 +167,37 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
     
     // MARK: - Helpers
     
+    private func loadSummaries() {
+        // Get all channels the current user is subscribed to
+        MMXChannel.subscribedChannelsWithSuccess({ [weak self] channels in
+            ChannelManager.sharedInstance.channels = channels
+            self?.subscribedChannels = channels
+            // Get summaries
+            let channelsSet = Set(channels)
+            MMXChannel.channelSummary(channelsSet, numberOfMessages: 10, numberOfSubcribers: 10, success: { summaryResponses in
+                ChannelManager.sharedInstance.channelSummaries = summaryResponses
+                self?.summaryResponses = summaryResponses
+                self?.refreshControl?.endRefreshing()
+                self?.tableView.reloadData()
+            }, failure: { error in
+                self?.refreshControl?.endRefreshing()
+                print(error)
+            })
+        }) { [weak self] error in
+            self?.refreshControl?.endRefreshing()
+            self?.tableView.reloadData()
+            print(error)
+        }
+    }
+    
     func updateSearchResultsForSearchController(searchController: UISearchController) {
+        let searchString = searchController.searchBar.text!.lowercaseString
         filteredSummaryResponses = summaryResponses.filter { summary in
             if let pubSubItems = summary.messages as? [MMXPubSubItemChannel] {
                 for message in pubSubItems {
                     let content = message.content as! [String : String]!
-                    if let text = content["message"] {
-                        return text.containsString(searchController.searchBar.text!.lowercaseString)
+                    if let text = content["message"] where text.containsString(searchString) {
+                        return true
                     }
                 }
             }
