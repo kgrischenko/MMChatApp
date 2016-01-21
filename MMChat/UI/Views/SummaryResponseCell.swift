@@ -20,8 +20,17 @@ class SummaryResponseCell: UITableViewCell {
     
     var summaryResponse : MMXChannelSummaryResponse! {
         didSet {
-            if let subscribers = summaryResponse.subscribers as? [MMXUserInfo] {
+            if var subscribers = summaryResponse.subscribers as? [MMXUserInfo] {
                 var subscribersTitle = ""
+                var index: Int?
+                subscribers.forEach({ user in
+                    if user.userId == MMUser.currentUser()?.userID {
+                        index = subscribers.indexOf(user)!
+                    }
+                })
+                // Exclude currentUser
+                if let _ = index { subscribers.removeAtIndex(index!) }
+                
                 for user in subscribers {
                     subscribersTitle += (subscribers.indexOf(user) == subscribers.count - 1) ? user.displayName! : "\(user.displayName!), "
                 }

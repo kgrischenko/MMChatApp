@@ -54,12 +54,11 @@ class ChatViewController: JSQMessagesViewController {
         
         // Find recipients
         if chat != nil {
-            chat?.subscribersWithLimit(100, offset: 0, success: { [weak self] (count, users) -> Void in
+            chat?.subscribersWithLimit(100, offset: 0, success: { [weak self] count, users in
                 self?.recipients = users
-            }, failure: { (error) -> Void in
+            }, failure: { error in
                 print("[ERROR]: \(error)")
             })
-            loadMessages()
         } else if recipients != nil {
             self.findChannelsBySubscribers(recipients)
         }
@@ -157,25 +156,28 @@ class ChatViewController: JSQMessagesViewController {
     
     func didReceiveMessage(notification: NSNotification) {
         
+        let tmp : [NSObject : AnyObject] = notification.userInfo!
+        let mmxMessage = tmp[MMXMessageKey] as! MMXMessage
+        //Check if message is for current chat
+        if chat?.name != mmxMessage.channel?.name { return }
+        
         //Show the typing indicator to be shown
         showTypingIndicator = !self.showTypingIndicator
         
         // Scroll to actually view the indicator
         scrollToBottomAnimated(true)
         
-        let tmp : [NSObject : AnyObject] = notification.userInfo!
-        let mmxMessage = tmp[MMXMessageKey] as! MMXMessage
-        
         // Allow typing indicator to show
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(1.0 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
             let message = Message(message: mmxMessage)
             self.messages.append(message)
             JSQSystemSoundPlayer.jsq_playMessageReceivedSound()
-            self.finishReceivingMessageAnimated(true)
             
             if message.isMediaMessage() {
                 message.mediaCompletionBlock = { [weak self] in self?.collectionView?.reloadData() }
             }
+            
+            self.finishReceivingMessageAnimated(true)
         })
     }
     
@@ -300,8 +302,6 @@ class ChatViewController: JSQMessagesViewController {
                 NSForegroundColorAttributeName : cell.textView?.textColor as! AnyObject,
                 NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue | NSUnderlineStyle.PatternSolid.rawValue
             ]
-        } else {
-            
         }
         
         return cell
@@ -423,7 +423,13 @@ class ChatViewController: JSQMessagesViewController {
         let dayAgo = theCalendar.dateByAddingComponents(dateComponents, toDate: now, options: NSCalendarOptions(rawValue: 0))
         
         channel.messagesBetweenStartDate(dayAgo, endDate: now, limit: 100, offset: 0, ascending: true, success: { totalCount, messages in
-            self.messages = messages.map({ Message(message: $0) })
+            self.messages = messages.map({
+                let message = Message(message: $0)
+                if message.isMediaMessage() {
+                    message.mediaCompletionBlock = { [weak self] in self?.collectionView?.reloadData() }
+                }
+                return message
+            })
             self.collectionView?.reloadData()
             self.scrollToBottomAnimated(false)
         }, failure: { error in

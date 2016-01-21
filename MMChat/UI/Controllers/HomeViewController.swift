@@ -152,6 +152,7 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "showChatFromChannelSummary" {
+            searchController.active = false
             if let chatVC = segue.destinationViewController as? ChatViewController, let cell = sender as? SummaryResponseCell {
                 chatVC.chat = ChannelManager.sharedInstance.channelForName(cell.summaryResponse.channelName)
             }
@@ -177,15 +178,13 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
             MMXChannel.channelSummary(channelsSet, numberOfMessages: 10, numberOfSubcribers: 10, success: { summaryResponses in
                 ChannelManager.sharedInstance.channelSummaries = summaryResponses
                 self?.summaryResponses = summaryResponses
-                self?.refreshControl?.endRefreshing()
-                self?.tableView.reloadData()
+                self?.endRefreshing()
             }, failure: { error in
-                self?.refreshControl?.endRefreshing()
+                self?.endRefreshing()
                 print(error)
             })
         }) { [weak self] error in
-            self?.refreshControl?.endRefreshing()
-            self?.tableView.reloadData()
+            self?.endRefreshing()
             print(error)
         }
     }
@@ -205,6 +204,11 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
             return false
         }
         
+        tableView.reloadData()
+    }
+    
+    private func endRefreshing() {
+        refreshControl?.endRefreshing()
         tableView.reloadData()
     }
 

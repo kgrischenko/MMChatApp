@@ -1,6 +1,6 @@
 //
 //  Message.swift
-//  Hola
+//  MMChat
 //
 //  Created by Pritesh Shah on 9/9/15.
 //  Copyright (c) 2015 Magnet Systems, Inc. All rights reserved.
@@ -12,11 +12,11 @@ import MMX
 
 class Message : NSObject, JSQMessageData {
     
-    let underlyingMessage: MMXMessage
     var mediaCompletionBlock: JSQLocationMediaItemCompletionBlock?
+    private let underlyingMessage: MMXMessage
     
     lazy var type: MessageType = {
-        return MessageType(rawValue: self.underlyingMessage.messageContent["type"]! as! String)
+        return MessageType(rawValue: self.underlyingMessage.messageContent["type"]!)
     }()!
     
     lazy var mediaContent: JSQMessageMediaData! = {
@@ -25,15 +25,17 @@ class Message : NSObject, JSQMessageData {
         case .Text:
             return nil
         case .Location:
-            if let messageContent = self.underlyingMessage.messageContent as? [String : String] {
-                
-                let location = CLLocation(latitude: Double(messageContent["latitude"]!)!, longitude: Double(messageContent["longitude"]!)!)
-                let locationMediaItem = JSQLocationMediaItem()
-                locationMediaItem.appliesMediaViewMaskAsOutgoing = false
+            let messageContent = self.underlyingMessage.messageContent
+            let locationMediaItem = JSQLocationMediaItem()
+            locationMediaItem.appliesMediaViewMaskAsOutgoing = false
+
+            if let latitude = Double(messageContent["latitude"]!), let longitude = Double(messageContent["longitude"]!) {
+                let location = CLLocation(latitude: latitude, longitude: longitude)
                 locationMediaItem.setLocation(location, withCompletionHandler: self.mediaCompletionBlock ?? nil)
-                self.mediaCompletionBlock = nil
-                return locationMediaItem
             }
+
+            self.mediaCompletionBlock = nil
+            return locationMediaItem
 
         case .Photo:
             let photoMediaItem = JSQPhotoMediaItem()
@@ -50,6 +52,7 @@ class Message : NSObject, JSQMessageData {
             }, failure: nil)
             
             return photoMediaItem
+            
         case .Video:
             let videoMediaItem = JSQVideoMediaItem()
             videoMediaItem.appliesMediaViewMaskAsOutgoing = false
@@ -95,9 +98,6 @@ class Message : NSObject, JSQMessageData {
     }
     
     func messageHash() -> UInt {
-        // FIXME:
-//        let contentHash = isMediaMessage() ? Int(media().mediaHash()) : text().hash
-//        return UInt(senderId().hash ^ date().hash ^ contentHash)
         return UInt(abs(underlyingMessage.messageID!.hash))
     }
     
