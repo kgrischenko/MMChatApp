@@ -88,6 +88,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods/AFOAuth2Manager.framework"
   install_framework "Pods/CocoaAsyncSocket.framework"
   install_framework "Pods/CocoaLumberjack.framework"
+  install_framework "Pods/FLAnimatedImage.framework"
   install_framework "Pods/JSQMessagesViewController.framework"
   install_framework "Pods/JSQSystemSoundPlayer.framework"
   install_framework "Pods/MDMCoreData.framework"
@@ -96,12 +97,14 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods/MagnetMax.framework"
   install_framework "Pods/MagnetMaxCore.framework"
   install_framework "Pods/Mantle.framework"
+  install_framework "Pods/NYTPhotoViewer.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/AFNetworking.framework"
   install_framework "Pods/AFOAuth2Manager.framework"
   install_framework "Pods/CocoaAsyncSocket.framework"
   install_framework "Pods/CocoaLumberjack.framework"
+  install_framework "Pods/FLAnimatedImage.framework"
   install_framework "Pods/JSQMessagesViewController.framework"
   install_framework "Pods/JSQSystemSoundPlayer.framework"
   install_framework "Pods/MDMCoreData.framework"
@@ -110,4 +113,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods/MagnetMax.framework"
   install_framework "Pods/MagnetMaxCore.framework"
   install_framework "Pods/Mantle.framework"
+  install_framework "Pods/NYTPhotoViewer.framework"
 fi

@@ -21,6 +21,7 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.2.0):
     - CocoaLumberjack/Default
+  - FLAnimatedImage (1.0.10)
   - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
@@ -86,16 +87,25 @@ PODS:
   - MMXXMPPFramework/XEP-0203 (3.6.13):
     - MMXXMPPFramework/Core
     - MMXXMPPFramework/XEP-0082
+  - NYTPhotoViewer (1.0.0):
+    - NYTPhotoViewer/AnimatedGifSupport (= 1.0.0)
+    - NYTPhotoViewer/Core (= 1.0.0)
+  - NYTPhotoViewer/AnimatedGifSupport (1.0.0):
+    - FLAnimatedImage (~> 1.0.8)
+    - NYTPhotoViewer/Core
+  - NYTPhotoViewer/Core (1.0.0)
 
 DEPENDENCIES:
   - JSQMessagesViewController
-  - MagnetMax (~> 2.3)
+  - MagnetMax (~> 2.3.0)
+  - NYTPhotoViewer (~> 1.0.0)
 
 SPEC CHECKSUMS:
   AFNetworking: 8e4e60500beb8bec644cf575beee72990a76d399
   AFOAuth2Manager: 9efc94eb158fbfca13e685c22d91721c7a64fc8c
   CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
+  FLAnimatedImage: e16a1e1cef08e4c509b47e4acbe3923f65c16135
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   MagnetMax: 10884d3b44ae1726758827e0e10a7e0c05928463
@@ -104,5 +114,6 @@ SPEC CHECKSUMS:
   MDMCoreData: 402f754cda90865026a209243f1667824e775649
   MMX: ca82f2f1667f3666d8a5d9e6b404e443e4cc6964
   MMXXMPPFramework: fd2c0a9450082cc25270bf9f8b1aec7b67e7a21e
+  NYTPhotoViewer: a2fa487ccfad736a8b7ba0b1a0f2652b878b74a7
 
 COCOAPODS: 0.39.0

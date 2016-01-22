@@ -8,3 +8,6 @@
 
 #import "SWRevealViewController.h"
 #import <JSQMessagesViewController/JSQMessages.h>
+
+#import <NYTPhotoViewer/NYTPhoto.h>
+#import <NYTPhotoViewer/NYTPhotosViewController.h>

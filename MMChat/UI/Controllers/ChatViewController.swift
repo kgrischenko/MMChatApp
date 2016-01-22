@@ -10,6 +10,7 @@ import UIKit
 import MagnetMax
 import JSQMessagesViewController
 import MobileCoreServices
+import NYTPhotoViewer
 
 class ChatViewController: JSQMessagesViewController {
     
@@ -46,6 +47,9 @@ class ChatViewController: JSQMessagesViewController {
             return
         }
         
+        //Register for a notification to receive the message
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MMXDidReceiveMessageNotification, object: nil)
+        
         senderId = user.userID
         senderDisplayName = user.firstName
 //        showLoadEarlierMessagesHeader = true
@@ -60,7 +64,7 @@ class ChatViewController: JSQMessagesViewController {
                 print("[ERROR]: \(error)")
             })
         } else if recipients != nil {
-            self.findChannelsBySubscribers(recipients)
+            findChannelsBySubscribers(recipients)
         }
     }
     
@@ -74,7 +78,7 @@ class ChatViewController: JSQMessagesViewController {
                 // Set channel name
                 let name = "\(self!.senderDisplayName)_\(ChannelManager.sharedInstance.newChannelName())"
                 
-                MMXChannel.createWithName(name, summary: "\(self!.senderDisplayName) private chat", isPublic: false, publishPermissions: .Subscribers, subscribers: subscribers, success: { channel in
+                MMXChannel.createWithName(name, summary: "\(self!.senderDisplayName) private chat", isPublic: false, publishPermissions: .Subscribers, subscribers: subscribers, success: { [weak self] channel in
                     self?.chat = channel
                 }, failure: { error in
                     print("[ERROR]: \(error)")
@@ -102,17 +106,10 @@ class ChatViewController: JSQMessagesViewController {
         }
     }
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didReceiveMessage:", name: MMXDidReceiveMessageNotification, object: nil)
-    }
-    
-    override func viewWillDisappear(animated: Bool) {
-        super.viewWillDisappear(animated)
-        
+    deinit {
+        print("--------> deinit <---------")
         NSNotificationCenter.defaultCenter().removeObserver(self)
-        // Save last channel view time
+        // Save the last channel show
         if let _ = chat {
             NSUserDefaults.standardUserDefaults().setObject(NSDate(), forKey: chat!.name)
         }
@@ -140,9 +137,8 @@ class ChatViewController: JSQMessagesViewController {
                     self?.recipients = allSubscribers
                 }
             } else if channels.count == 0 {
-                self?.chat?.addSubscribers(newSubscribers, success: { invalidUsers in
+                self?.chat?.addSubscribers(newSubscribers, success: { [weak self] _ in
                     self?.recipients = allSubscribers
-                    print(invalidUsers)
                 }, failure: { error in
                     print("[ERROR]: can't add subscribers - \(error)")
                 })
@@ -168,16 +164,16 @@ class ChatViewController: JSQMessagesViewController {
         scrollToBottomAnimated(true)
         
         // Allow typing indicator to show
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(1.0 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (Int64)(1.0 * Double(NSEC_PER_SEC))), dispatch_get_main_queue(), { [weak self] () in
             let message = Message(message: mmxMessage)
-            self.messages.append(message)
+            self?.messages.append(message)
             JSQSystemSoundPlayer.jsq_playMessageReceivedSound()
             
             if message.isMediaMessage() {
                 message.mediaCompletionBlock = { [weak self] in self?.collectionView?.reloadData() }
             }
             
-            self.finishReceivingMessageAnimated(true)
+            self?.finishReceivingMessageAnimated(true)
         })
     }
     
@@ -195,9 +191,9 @@ class ChatViewController: JSQMessagesViewController {
         ]
 
         let mmxMessage = MMXMessage(toChannel: channel, messageContent: messageContent)
-        mmxMessage.sendWithSuccess( { (invalidUsers) -> Void in
-            self.finishSendingMessageAnimated(true)
-        }) { (error) -> Void in
+        mmxMessage.sendWithSuccess( { [weak self] _ in
+            self?.finishSendingMessageAnimated(true)
+        }) { error in
             print(error)
         }
     }
@@ -355,6 +351,20 @@ class ChatViewController: JSQMessagesViewController {
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
         print("Tapped message bubble!")
+        let message = messages[indexPath.item] as! Message
+        
+        if message.isMediaMessage() {
+            switch message.type {
+            case .Text: break
+            case .Location: break
+            case .Photo:
+                let photoItem = message.media() as! JSQPhotoMediaItem
+                let photo = Photo(photo: photoItem.image)
+                let viewer = NYTPhotosViewController(photos: [photo])
+                self.presentViewController(viewer, animated: true, completion: nil)
+            case .Video: break
+            }
+        }
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapCellAtIndexPath indexPath: NSIndexPath!, touchLocation: CGPoint) {
@@ -422,16 +432,16 @@ class ChatViewController: JSQMessagesViewController {
         let now = NSDate()
         let dayAgo = theCalendar.dateByAddingComponents(dateComponents, toDate: now, options: NSCalendarOptions(rawValue: 0))
         
-        channel.messagesBetweenStartDate(dayAgo, endDate: now, limit: 100, offset: 0, ascending: true, success: { totalCount, messages in
-            self.messages = messages.map({
+        channel.messagesBetweenStartDate(dayAgo, endDate: now, limit: 100, offset: 0, ascending: true, success: { [weak self] totalCount, messages in
+            self?.messages = messages.map({
                 let message = Message(message: $0)
                 if message.isMediaMessage() {
                     message.mediaCompletionBlock = { [weak self] in self?.collectionView?.reloadData() }
                 }
                 return message
             })
-            self.collectionView?.reloadData()
-            self.scrollToBottomAnimated(false)
+            self?.collectionView?.reloadData()
+            self?.scrollToBottomAnimated(false)
         }, failure: { error in
             print(error)
         })
@@ -453,8 +463,8 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
             
                 let attachment = MMAttachment(data: data, mimeType: "image/*")
                 mmxMessage.addAttachment(attachment)
-                mmxMessage.sendWithSuccess({ (invalidUsers) -> Void in
-                    self.finishSendingMessageAnimated(true)
+                mmxMessage.sendWithSuccess({ [weak self] _ in
+                    self?.finishSendingMessageAnimated(true)
                 }) { (error) -> Void in
                     print(error)
                 }
@@ -464,8 +474,8 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
             let mmxMessage = MMXMessage(toChannel: chat!, messageContent: messageContent)
             let attachment = MMAttachment(fileURL: urlOfVideo, mimeType: "video/*")
             mmxMessage.addAttachment(attachment)
-            mmxMessage.sendWithSuccess({ (invalidUsers) -> Void in
-                self.finishSendingMessageAnimated(true)
+            mmxMessage.sendWithSuccess({ [weak self] _ in
+                self?.finishSendingMessageAnimated(true)
             }) { (error) -> Void in
                 print(error)
             }
