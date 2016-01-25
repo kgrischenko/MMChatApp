@@ -107,7 +107,7 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     deinit {
-        print("--------> deinit <---------")
+        print("--------> deinit chat <---------")
         NSNotificationCenter.defaultCenter().removeObserver(self)
         // Save the last channel show
         if let _ = chat {
@@ -354,15 +354,21 @@ class ChatViewController: JSQMessagesViewController {
         let message = messages[indexPath.item] as! Message
         
         if message.isMediaMessage() {
+            self.inputToolbar!.contentView!.textView?.resignFirstResponder()
+            
             switch message.type {
             case .Text: break
-            case .Location: break
+            case .Location:
+                self.performSegueWithIdentifier("showMapViewController", sender: message.media())
             case .Photo:
                 let photoItem = message.media() as! JSQPhotoMediaItem
                 let photo = Photo(photo: photoItem.image)
                 let viewer = NYTPhotosViewController(photos: [photo])
-                self.presentViewController(viewer, animated: true, completion: nil)
-            case .Video: break
+                presentViewController(viewer, animated: true, completion: nil)
+            case .Video:
+                let videoVC = VideoViewController()
+                videoVC.attachment = message.underlyingMessage.attachments?.first
+                presentViewController(videoVC, animated: true, completion: nil)
             }
         }
     }
@@ -418,6 +424,11 @@ class ChatViewController: JSQMessagesViewController {
                 detailVC.recipients = recipients
                 detailVC.channel = chat
             }
+        } else if segue.identifier == "showMapViewController" {
+            if let locationItem = sender as? JSQLocationMediaItem {
+                let mapVC = segue.destinationViewController as! MapViewController
+                mapVC.location = locationItem.coordinate
+            }
         }
     }
     
@@ -426,7 +437,7 @@ class ChatViewController: JSQMessagesViewController {
         guard let channel = self.chat else { return }
         
         let dateComponents = NSDateComponents()
-        dateComponents.day = -1
+        dateComponents.year = -1
         
         let theCalendar = NSCalendar.currentCalendar()
         let now = NSDate()
@@ -465,18 +476,19 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
                 mmxMessage.addAttachment(attachment)
                 mmxMessage.sendWithSuccess({ [weak self] _ in
                     self?.finishSendingMessageAnimated(true)
-                }) { (error) -> Void in
+                }) { error in
                     print(error)
                 }
             }
         } else if let urlOfVideo = info[UIImagePickerControllerMediaURL] as? NSURL {
             let messageContent = ["type" : MessageType.Video.rawValue]
+            let name = urlOfVideo.lastPathComponent
             let mmxMessage = MMXMessage(toChannel: chat!, messageContent: messageContent)
-            let attachment = MMAttachment(fileURL: urlOfVideo, mimeType: "video/*")
+            let attachment = MMAttachment(fileURL: urlOfVideo, mimeType: "video/quicktime", name: name, description: "Video file")
             mmxMessage.addAttachment(attachment)
             mmxMessage.sendWithSuccess({ [weak self] _ in
                 self?.finishSendingMessageAnimated(true)
-            }) { (error) -> Void in
+            }) { error in
                 print(error)
             }
         }

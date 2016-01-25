@@ -79,6 +79,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Player.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -103,6 +108,11 @@
 			<true/>
 		</dict>
 		<key>3D70C6C5B09DE92EE80187DA25B7057C</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>4BE2089A66502A0899FBE93EE81508F6</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -142,12 +152,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>D4FC558636F6EF8E46A978E829C6A664</key>
+		<key>C1E63A1BF93FD336FEC6B7950AA018F2</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>DA3A28C112B0AB1483F4A7D7B3294545</key>
+		<key>D4FC558636F6EF8E46A978E829C6A664</key>
 		<dict>
 			<key>primary</key>
 			<true/>

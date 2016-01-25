@@ -81,7 +81,7 @@ class SummaryResponseCell: UITableViewCell {
             if result == .OrderedAscending {
                 return JSQMessagesTimestampFormatter.sharedFormatter().timeForDate(lastPublishedTime)
             } else {
-                return JSQMessagesTimestampFormatter.sharedFormatter().relativeDateForDate(lastPublishedTime)
+                return ChannelManager.sharedInstance.relativeDateForDate(lastPublishedTime)
             }
         }
         

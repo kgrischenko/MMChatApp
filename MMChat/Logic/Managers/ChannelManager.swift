@@ -83,6 +83,12 @@ class ChannelManager: NSObject {
         return "\(fakeTimestamp)"
     }
     
+    func relativeDateForDate(date: NSDate) -> String {
+        formatter.dateStyle = .ShortStyle
+        formatter.timeStyle = .NoStyle
+        return formatter.stringFromDate(date)
+    }
+    
     // MARK: - Private implementation
     
     private override init() {

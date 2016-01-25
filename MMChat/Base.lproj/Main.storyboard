@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1509" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vzp-aP-CxL">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="14F1605" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vzp-aP-CxL">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -462,10 +462,57 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <segue destination="Bi4-TZ-no2" kind="presentation" identifier="showMapViewController" id="jFU-UZ-5Jn"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qhy-aR-CcC" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="3071" y="491"/>
+        </scene>
+        <!--Map View Controller-->
+        <scene sceneID="eRY-Nx-tSg">
+            <objects>
+                <viewController id="Bi4-TZ-no2" customClass="MapViewController" customModule="MMChat" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Jcg-e3-IQc"/>
+                        <viewControllerLayoutGuide type="bottom" id="iEZ-81-Add"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="IOa-Pb-agd">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" rotateEnabled="NO" pitchEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LxA-TX-vDd">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <connections>
+                                    <outlet property="delegate" destination="Bi4-TZ-no2" id="uaO-4K-XS1"/>
+                                </connections>
+                            </mapView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n4B-h5-VfB">
+                                <rect key="frame" x="20" y="28" width="15" height="22"/>
+                                <state key="normal" image="NYTPhotoViewerCloseButtonX.png"/>
+                                <connections>
+                                    <action selector="closeAction" destination="Bi4-TZ-no2" eventType="touchUpInside" id="S5L-2J-VWi"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="LxA-TX-vDd" firstAttribute="top" secondItem="IOa-Pb-agd" secondAttribute="top" id="SjX-3V-RZB"/>
+                            <constraint firstItem="LxA-TX-vDd" firstAttribute="leading" secondItem="n4B-h5-VfB" secondAttribute="trailing" constant="-35" id="XJC-zY-k3R"/>
+                            <constraint firstItem="LxA-TX-vDd" firstAttribute="leading" secondItem="IOa-Pb-agd" secondAttribute="leading" id="hjp-Cg-PIE"/>
+                            <constraint firstItem="LxA-TX-vDd" firstAttribute="top" secondItem="n4B-h5-VfB" secondAttribute="bottom" constant="-50" id="m4h-qk-xxR"/>
+                            <constraint firstItem="iEZ-81-Add" firstAttribute="top" secondItem="LxA-TX-vDd" secondAttribute="bottom" id="m9r-bv-JXy"/>
+                            <constraint firstAttribute="trailing" secondItem="LxA-TX-vDd" secondAttribute="trailing" id="rf3-ej-s1J"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="vMap" destination="LxA-TX-vDd" id="vrR-bt-Vy2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="17e-Uq-Un6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3709" y="-221"/>
         </scene>
         <!--Details-->
         <scene sceneID="A8y-9a-slq">
@@ -825,6 +872,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="NYTPhotoViewerCloseButtonX.png" width="15" height="15"/>
         <image name="disclosure.png" width="13" height="14"/>
         <image name="menu.png" width="24" height="14"/>
         <image name="messages.png" width="76" height="74"/>

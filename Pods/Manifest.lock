@@ -94,11 +94,13 @@ PODS:
     - FLAnimatedImage (~> 1.0.8)
     - NYTPhotoViewer/Core
   - NYTPhotoViewer/Core (1.0.0)
+  - Player (0.1.0)
 
 DEPENDENCIES:
   - JSQMessagesViewController
   - MagnetMax (~> 2.3.0)
   - NYTPhotoViewer (~> 1.0.0)
+  - Player
 
 SPEC CHECKSUMS:
   AFNetworking: 8e4e60500beb8bec644cf575beee72990a76d399
@@ -115,5 +117,6 @@ SPEC CHECKSUMS:
   MMX: ca82f2f1667f3666d8a5d9e6b404e443e4cc6964
   MMXXMPPFramework: fd2c0a9450082cc25270bf9f8b1aec7b67e7a21e
   NYTPhotoViewer: a2fa487ccfad736a8b7ba0b1a0f2652b878b74a7
+  Player: e05be4073ea64fce1981869898ad9796c27cdd2b
 
 COCOAPODS: 0.39.0

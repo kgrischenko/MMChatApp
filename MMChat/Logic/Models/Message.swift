@@ -13,7 +13,7 @@ import MMX
 class Message : NSObject, JSQMessageData {
     
     var mediaCompletionBlock: JSQLocationMediaItemCompletionBlock?
-    private let underlyingMessage: MMXMessage
+    let underlyingMessage: MMXMessage
     
     lazy var type: MessageType = {
         return MessageType(rawValue: self.underlyingMessage.messageContent["type"]!)
@@ -56,18 +56,10 @@ class Message : NSObject, JSQMessageData {
         case .Video:
             let videoMediaItem = JSQVideoMediaItem()
             videoMediaItem.appliesMediaViewMaskAsOutgoing = false
-            videoMediaItem.fileURL = nil
-            videoMediaItem.isReadyToPlay = false
+            videoMediaItem.isReadyToPlay = true
             
             let attachment = self.underlyingMessage.attachments?.first
-            attachment?.downloadFileWithSuccess({ [weak self] fileURL in
-                videoMediaItem.fileURL = fileURL
-                videoMediaItem.isReadyToPlay = true
-                if self?.mediaCompletionBlock != nil {
-                    self?.mediaCompletionBlock!()
-                    self?.mediaCompletionBlock = nil
-                }
-            }, failure: nil)
+            videoMediaItem.fileURL = attachment!.downloadURL
             
             return videoMediaItem
         }

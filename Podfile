@@ -8,3 +8,4 @@ use_frameworks!
 pod 'MagnetMax', '~> 2.3.0'
 pod 'JSQMessagesViewController'
 pod 'NYTPhotoViewer', '~> 1.0.0'
+pod 'Player'
