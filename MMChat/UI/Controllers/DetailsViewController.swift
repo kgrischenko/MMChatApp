@@ -22,6 +22,7 @@ class DetailsViewController: UITableViewController, ContactsViewControllerDelega
     @IBAction func leaveAction() {
         if channel != nil {
             channel.unSubscribeWithSuccess({ [weak self] in
+                ChannelManager.sharedInstance.removeLastViewTimeForChannel((self?.channel.name)!)
                 self?.navigationController?.popToRootViewControllerAnimated(true)
             }, failure: { error in
                 print("[ERROR]: \(error)")

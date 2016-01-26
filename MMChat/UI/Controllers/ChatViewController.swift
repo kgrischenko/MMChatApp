@@ -16,8 +16,8 @@ class ChatViewController: JSQMessagesViewController {
     
     var messages = [JSQMessageData]()
     var avatars = Dictionary<String, UIImage>()
-    var outgoingBubbleImageView = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
-    var incomingBubbleImageView = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
+    let outgoingBubbleImageView = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
+    let incomingBubbleImageView = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
     
     var chat : MMXChannel? {
         didSet {
@@ -76,7 +76,7 @@ class ChatViewController: JSQMessagesViewController {
                 let subscribers = Set(users)
                 
                 // Set channel name
-                let name = "\(self!.senderDisplayName)_\(ChannelManager.sharedInstance.newChannelName())"
+                let name = "\(self!.senderDisplayName)_\(ChannelManager.sharedInstance.formatter.newChannelName())"
                 
                 MMXChannel.createWithName(name, summary: "\(self!.senderDisplayName) private chat", isPublic: false, publishPermissions: .Subscribers, subscribers: subscribers, success: { [weak self] channel in
                     self?.chat = channel
@@ -111,7 +111,7 @@ class ChatViewController: JSQMessagesViewController {
         NSNotificationCenter.defaultCenter().removeObserver(self)
         // Save the last channel show
         if let _ = chat {
-            NSUserDefaults.standardUserDefaults().setObject(NSDate(), forKey: chat!.name)
+            ChannelManager.sharedInstance.saveLastViewTimeForChannel(chat!.name)
         }
     }
     
@@ -374,7 +374,6 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapCellAtIndexPath indexPath: NSIndexPath!, touchLocation: CGPoint) {
-        print("Tapped cell at \(touchLocation)")
     }
     
     // MARK: Helper methods
@@ -443,7 +442,7 @@ class ChatViewController: JSQMessagesViewController {
         let now = NSDate()
         let dayAgo = theCalendar.dateByAddingComponents(dateComponents, toDate: now, options: NSCalendarOptions(rawValue: 0))
         
-        channel.messagesBetweenStartDate(dayAgo, endDate: now, limit: 100, offset: 0, ascending: true, success: { [weak self] totalCount, messages in
+        channel.messagesBetweenStartDate(dayAgo, endDate: now, limit: 100, offset: 0, ascending: true, success: { [weak self] _ , messages in
             self?.messages = messages.map({
                 let message = Message(message: $0)
                 if message.isMediaMessage() {

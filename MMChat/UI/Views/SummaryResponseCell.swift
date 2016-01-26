@@ -38,9 +38,11 @@ class SummaryResponseCell: UITableViewCell {
             }
             if let messages = summaryResponse.messages as? [MMXPubSubItemChannel], content = messages.last?.content as! [String : String]! {
                 lblMessage.text = content["message"] ?? "Attachment file"
+            } else {
+                lblMessage.text = ""
             }
             
-            lblLastTime.text = displayLastPublishedTime()
+            lblLastTime.text = ChannelManager.sharedInstance.formatter.displayTime(summaryResponse.lastPublishedTime!)
             ivMessageIcon.image = (summaryResponse.subscribers.count > 2) ? UIImage(named: "messages.png") : UIImage(named: "message.png")
             vNewMessageIndicator.hidden = !hasNewMessagesFromLastTime()
         }
@@ -56,8 +58,8 @@ class SummaryResponseCell: UITableViewCell {
     // MARK: - Helpers
     
     private func hasNewMessagesFromLastTime() -> Bool {
-        if let lastViewTime = NSUserDefaults.standardUserDefaults().objectForKey(summaryResponse.channelName) as? NSDate {
-            if let lastPublishedTime = dateForLastPublishedTime() {
+        if let lastViewTime = ChannelManager.sharedInstance.getLastViewTimeForChannel(summaryResponse.channelName) {
+            if let lastPublishedTime = ChannelManager.sharedInstance.formatter.dateForStringTime(summaryResponse.lastPublishedTime!) {
                 let result = lastViewTime.compare(lastPublishedTime)
                 if result == .OrderedAscending {
                     return true
@@ -70,26 +72,6 @@ class SummaryResponseCell: UITableViewCell {
         }
         
         return false
-    }
-    
-    private func displayLastPublishedTime() -> String! {
-        let secondsInDay: NSTimeInterval = 24 * 60 * 60
-        let yesturday = NSDate(timeInterval: -secondsInDay, sinceDate: NSDate())
-        
-        if let lastPublishedTime = dateForLastPublishedTime() {
-            let result = yesturday.compare(lastPublishedTime)
-            if result == .OrderedAscending {
-                return JSQMessagesTimestampFormatter.sharedFormatter().timeForDate(lastPublishedTime)
-            } else {
-                return ChannelManager.sharedInstance.relativeDateForDate(lastPublishedTime)
-            }
-        }
-        
-        return summaryResponse.lastPublishedTime!
-    }
-    
-    private func dateForLastPublishedTime() -> NSDate? {
-        return ChannelManager.sharedInstance.dateForLastPublishedTime(summaryResponse.lastPublishedTime!)
     }
 
 }

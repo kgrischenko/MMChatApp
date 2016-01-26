@@ -111,6 +111,7 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
                     chat.deleteWithSuccess({ _ in
                         self?.summaryResponses.removeAtIndex(index.row)
                         tableView.deleteRowsAtIndexPaths([index], withRowAnimation: .Fade)
+                        ChannelManager.sharedInstance.removeLastViewTimeForChannel(summaryResponse.channelName)
                     }, failure: { error in
                         print(error)
                     })
@@ -126,6 +127,7 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
                 chat.unSubscribeWithSuccess({ _ in
                     self?.summaryResponses.removeAtIndex(index.row)
                     tableView.deleteRowsAtIndexPaths([index], withRowAnimation: .Fade)
+                    ChannelManager.sharedInstance.removeLastViewTimeForChannel(summaryResponse.channelName)
                 }, failure: { error in
                     print(error)
                 })

@@ -12,7 +12,8 @@ import MagnetMax
 class ChannelManager: NSObject {
     
     static let sharedInstance = ChannelManager()
-    
+
+    let formatter = DateFormatter()
     var channels : [MMXChannel]?
     var channelSummaries : [MMXChannelSummaryResponse]?
     
@@ -52,51 +53,35 @@ class ChannelManager: NSObject {
         return nil
     }
     
-    func dateForLastPublishedTime(stringTime: String) -> NSDate? {
-        var date = stringTime
-        if date.containsString(".") {
-            date = date.substringToIndex(date.characters.indexOf(".")!)
+    func saveLastViewTimeForChannel(name: String) {
+        if let user = MMUser.currentUser() {
+            let lastViewTime = UserViewTimestamp(userName: user.userName, date: NSDate())
+            let userDefaults = NSUserDefaults.standardUserDefaults()
+            let encodedData = NSKeyedArchiver.archivedDataWithRootObject(lastViewTime)
+            userDefaults.setObject(encodedData, forKey: name)
+            userDefaults.synchronize()
         }
-        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        return formatter.dateFromString(date)
     }
     
-    func newChannelName() -> String {
-        // Example: 20120718073109
-        //    year: 20120000000000
-        //   month: 00000700000000
-        //     day: 00000018000000
-        //    hour: 00000000070000
-        //  minute: 00000000003100
-        //  second: 00000000000009
-        
-        let components = NSCalendar.currentCalendar().components([NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day, NSCalendarUnit.Hour, NSCalendarUnit.Minute, NSCalendarUnit.Second], fromDate: NSDate())
-        var fakeTimestamp: Int64 = 0
-        let tenMillions : Int64 = 10000000000
-        fakeTimestamp += Int64(components.year) * tenMillions
-        fakeTimestamp += components.month * 100000000
-        fakeTimestamp += components.day * 1000000
-        fakeTimestamp += components.hour * 10000
-        fakeTimestamp += components.minute * 100
-        fakeTimestamp += components.second
-        
-        return "\(fakeTimestamp)"
+    func getLastViewTimeForChannel(name: String) -> NSDate? {
+        if let decoded = NSUserDefaults.standardUserDefaults().objectForKey(name) as? NSData {
+            let decodedTime = NSKeyedUnarchiver.unarchiveObjectWithData(decoded) as! UserViewTimestamp
+            if decodedTime.userName == MMUser.currentUser()?.userName {
+                return decodedTime.date
+            }
+        }
+        return nil
     }
     
-    func relativeDateForDate(date: NSDate) -> String {
-        formatter.dateStyle = .ShortStyle
-        formatter.timeStyle = .NoStyle
-        return formatter.stringFromDate(date)
+    func removeLastViewTimeForChannel(name: String) {
+        NSUserDefaults.standardUserDefaults().removeObjectForKey(name)
     }
     
     // MARK: - Private implementation
     
     private override init() {
         super.init()
-        formatter.locale = NSLocale.currentLocale()
-        formatter.timeZone = NSTimeZone(name: "GMT")
+
     }
     
-    private let formatter = NSDateFormatter()
-
 }

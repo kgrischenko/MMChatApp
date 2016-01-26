@@ -46,6 +46,8 @@
 		8B71BE751C57B2E1006E5C1F /* videoplayer_shrink@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B71BE671C57B1A6006E5C1F /* videoplayer_shrink@1x.png */; };
 		8B71BE761C57B2E1006E5C1F /* videoplayer_shrink@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B71BE681C57B1A6006E5C1F /* videoplayer_shrink@2x.png */; };
 		8B71BE771C57B2E1006E5C1F /* videoplayer_shrink@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8B71BE691C57B1A6006E5C1F /* videoplayer_shrink@3x.png */; };
+		8B71BE7A1C57BB42006E5C1F /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B71BE791C57BB42006E5C1F /* DateFormatter.swift */; };
+		8B71BE7C1C57C70E006E5C1F /* UserViewTimestamp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B71BE7B1C57C70E006E5C1F /* UserViewTimestamp.swift */; };
 		8B81C12E1C3C1E5600C186B6 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B81C12D1C3C1E5600C186B6 /* ChatViewController.swift */; };
 		8B81C1321C3C21D800C186B6 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B81C1311C3C21D800C186B6 /* Message.swift */; };
 		8B81C1351C3C22CA00C186B6 /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B81C1341C3C22CA00C186B6 /* DownloadManager.swift */; };
@@ -117,6 +119,8 @@
 		8B71BE671C57B1A6006E5C1F /* videoplayer_shrink@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_shrink@1x.png"; sourceTree = "<group>"; };
 		8B71BE681C57B1A6006E5C1F /* videoplayer_shrink@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_shrink@2x.png"; sourceTree = "<group>"; };
 		8B71BE691C57B1A6006E5C1F /* videoplayer_shrink@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "videoplayer_shrink@3x.png"; sourceTree = "<group>"; };
+		8B71BE791C57BB42006E5C1F /* DateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		8B71BE7B1C57C70E006E5C1F /* UserViewTimestamp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserViewTimestamp.swift; sourceTree = "<group>"; };
 		8B81C12D1C3C1E5600C186B6 /* ChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		8B81C1311C3C21D800C186B6 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		8B81C1341C3C22CA00C186B6 /* DownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
@@ -302,6 +306,14 @@
 			path = ../../Pods/DZVideoPlayerViewController/Pod/Assets;
 			sourceTree = "<group>";
 		};
+		8B71BE781C57BB29006E5C1F /* DateFormatter */ = {
+			isa = PBXGroup;
+			children = (
+				8B71BE791C57BB42006E5C1F /* DateFormatter.swift */,
+			);
+			path = DateFormatter;
+			sourceTree = "<group>";
+		};
 		8B81C12F1C3C21D800C186B6 /* Logic */ = {
 			isa = PBXGroup;
 			children = (
@@ -316,6 +328,7 @@
 			children = (
 				8B81C1311C3C21D800C186B6 /* Message.swift */,
 				8B9C67641C522D5F00661586 /* Photo.swift */,
+				8B71BE7B1C57C70E006E5C1F /* UserViewTimestamp.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -377,6 +390,7 @@
 		8B8E802F1C2ACA1F008D8C43 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				8B71BE781C57BB29006E5C1F /* DateFormatter */,
 				8B38D2E41C5698DE006431F7 /* MapViewController */,
 				8B1A56241C52612C00D7F14C /* VideoPlayer */,
 				8BF254BE1C496951008719AA /* Popup */,
@@ -621,6 +635,7 @@
 				8B9C67651C522D5F00661586 /* Photo.swift in Sources */,
 				8B8E80381C2ACDBE008D8C43 /* BaseNavigationController.swift in Sources */,
 				8B8E803A1C2AE17E008D8C43 /* ForgotPasswordViewController.swift in Sources */,
+				8B71BE7A1C57BB42006E5C1F /* DateFormatter.swift in Sources */,
 				8B09099C1C3A92870042F361 /* ChangePasswordViewController.swift in Sources */,
 				8B3EBB611C3BF80300BAED8E /* ContactsViewController.swift in Sources */,
 				8B223F4B1C33099B0096D204 /* HomeViewController.swift in Sources */,
@@ -629,6 +644,7 @@
 				8B3EBB5F1C3BE0F400BAED8E /* RearMenuViewController.swift in Sources */,
 				8B0760381C4E5D9A00EAC402 /* ChannelManager.swift in Sources */,
 				8B2E53CE1C2AC31900C9AC47 /* AppDelegate.swift in Sources */,
+				8B71BE7C1C57C70E006E5C1F /* UserViewTimestamp.swift in Sources */,
 				8B81C12E1C3C1E5600C186B6 /* ChatViewController.swift in Sources */,
 				8B6AA87D1C3C3BB100DE3C42 /* DetailsViewController.swift in Sources */,
 				8B8E803C1C2AE733008D8C43 /* RegisterViewController.swift in Sources */,
