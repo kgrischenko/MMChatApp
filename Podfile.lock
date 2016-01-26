@@ -21,6 +21,7 @@ PODS:
     - CocoaLumberjack/Core
   - CocoaLumberjack/Extensions (2.2.0):
     - CocoaLumberjack/Default
+  - DZVideoPlayerViewController (0.4.0)
   - FLAnimatedImage (1.0.10)
   - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
@@ -97,6 +98,7 @@ PODS:
   - Player (0.1.0)
 
 DEPENDENCIES:
+  - DZVideoPlayerViewController
   - JSQMessagesViewController
   - MagnetMax (~> 2.3.0)
   - NYTPhotoViewer (~> 1.0.0)
@@ -107,6 +109,7 @@ SPEC CHECKSUMS:
   AFOAuth2Manager: 9efc94eb158fbfca13e685c22d91721c7a64fc8c
   CocoaAsyncSocket: 7cbf214b27f8e7f7574db6a3fd96352ffaed433d
   CocoaLumberjack: 17fe8581f84914d5d7e6360f7c70022b173c3ae0
+  DZVideoPlayerViewController: 4886c5016a632cbd94a85e6071806e4929c01653
   FLAnimatedImage: e16a1e1cef08e4c509b47e4acbe3923f65c16135
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d

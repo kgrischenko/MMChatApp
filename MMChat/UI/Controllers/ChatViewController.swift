@@ -366,7 +366,7 @@ class ChatViewController: JSQMessagesViewController {
                 let viewer = NYTPhotosViewController(photos: [photo])
                 presentViewController(viewer, animated: true, completion: nil)
             case .Video:
-                let videoVC = VideoViewController()
+                let videoVC = VideoPlayerViewController()
                 videoVC.attachment = message.underlyingMessage.attachments?.first
                 presentViewController(videoVC, animated: true, completion: nil)
             }

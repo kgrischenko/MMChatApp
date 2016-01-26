@@ -11,3 +11,5 @@
 
 #import <NYTPhotoViewer/NYTPhoto.h>
 #import <NYTPhotoViewer/NYTPhotosViewController.h>
+
+#import <DZVideoPlayerViewController/DZVideoPlayerViewController.h>
