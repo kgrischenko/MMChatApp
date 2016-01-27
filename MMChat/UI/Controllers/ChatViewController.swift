@@ -68,44 +68,6 @@ class ChatViewController: JSQMessagesViewController {
         }
     }
     
-    private func findChannelsBySubscribers(users: [MMUser]) {
-        //Check if channel exists
-        MMXChannel.findChannelsBySubscribers(users, matchType: .EXACT_MATCH, success: { [weak self] channels in
-            if channels.count == 0 {
-                //Create new chat
-                let subscribers = Set(users)
-                
-                // Set channel name
-                let name = "\(self!.senderDisplayName)_\(ChannelManager.sharedInstance.formatter.newChannelName())"
-                
-                MMXChannel.createWithName(name, summary: "\(self!.senderDisplayName) private chat", isPublic: false, publishPermissions: .Subscribers, subscribers: subscribers, success: { [weak self] channel in
-                    self?.chat = channel
-                }, failure: { error in
-                    print("[ERROR]: \(error)")
-                    let alert = Popup(message: error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close", handler: { _ in
-                        self?.navigationController?.popViewControllerAnimated(true)
-                    })
-                    alert.presentForController(self!)
-                })
-            } else if channels.count == 1 {
-                //FIXME: temp solution
-                let info : AnyObject = channels
-                if let channelInfo = info as? [MMXChannelInfo] {
-                    self?.chat = ChannelManager.sharedInstance.channelForName(channelInfo.first!.name)
-                }
-                
-                //Use existing
-//                self?.chat = channels.first
-            }
-        }) { error in
-            print("[ERROR]: \(error)")
-            let alert = Popup(message: error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close", handler: { _ in
-                self.navigationController?.popViewControllerAnimated(true)
-            })
-            alert.presentForController(self)
-        }
-    }
-    
     deinit {
         print("--------> deinit chat <---------")
         NSNotificationCenter.defaultCenter().removeObserver(self)
@@ -202,7 +164,9 @@ class ChatViewController: JSQMessagesViewController {
         
         guard let _ = self.chat else { return }
         
-        let alertController = UIAlertController(title: "Media messages", message: nil, preferredStyle: .Alert)
+        self.inputToolbar!.contentView!.textView?.resignFirstResponder()
+        
+        let alertController = UIAlertController(title: "Media messages", message: nil, preferredStyle: .ActionSheet)
         
         let sendPhotoAction = UIAlertAction(title: "Send photo", style: .Default) { (_) in
             self.addPhotoMediaMessage()
@@ -366,9 +330,11 @@ class ChatViewController: JSQMessagesViewController {
                 let viewer = NYTPhotosViewController(photos: [photo])
                 presentViewController(viewer, animated: true, completion: nil)
             case .Video:
-                let videoVC = VideoPlayerViewController(nibName: "VideoPlayerViewController", bundle: nil)
-                videoVC.attachment = message.underlyingMessage.attachments?.first
-                presentViewController(videoVC, animated: true, completion: nil)
+                if let attachment = message.underlyingMessage.attachments?.first where attachment.name != nil {
+                    let videoVC = VideoPlayerViewController(nibName: "VideoPlayerViewController", bundle: nil)
+                    videoVC.attachment = attachment
+                    presentViewController(videoVC, animated: true, completion: nil)
+                }
             }
         }
     }
@@ -415,19 +381,41 @@ class ChatViewController: JSQMessagesViewController {
         presentViewController(imagePicker, animated: true, completion: nil)
     }
     
-    // MARK: - Navigation
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "showDetailsSegue" {
-            if let detailVC = segue.destinationViewController as? DetailsViewController {
-                detailVC.recipients = recipients
-                detailVC.channel = chat
+    private func findChannelsBySubscribers(users: [MMUser]) {
+        //Check if channel exists
+        MMXChannel.findChannelsBySubscribers(users, matchType: .EXACT_MATCH, success: { [weak self] channels in
+            if channels.count == 0 {
+                //Create new chat
+                let subscribers = Set(users)
+                
+                // Set channel name
+                let name = "\(self!.senderDisplayName)_\(ChannelManager.sharedInstance.formatter.newChannelName())"
+                
+                MMXChannel.createWithName(name, summary: "\(self!.senderDisplayName) private chat", isPublic: false, publishPermissions: .Subscribers, subscribers: subscribers, success: { [weak self] channel in
+                    self?.chat = channel
+                    }, failure: { error in
+                        print("[ERROR]: \(error)")
+                        let alert = Popup(message: error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close", handler: { _ in
+                            self?.navigationController?.popViewControllerAnimated(true)
+                        })
+                        alert.presentForController(self!)
+                })
+            } else if channels.count == 1 {
+                //FIXME: temp solution
+                let info : AnyObject = channels
+                if let channelInfo = info as? [MMXChannelInfo] {
+                    self?.chat = ChannelManager.sharedInstance.channelForName(channelInfo.first!.name)
+                }
+                
+                //Use existing
+                //                self?.chat = channels.first
             }
-        } else if segue.identifier == "showMapViewController" {
-            if let locationItem = sender as? JSQLocationMediaItem {
-                let mapVC = segue.destinationViewController as! MapViewController
-                mapVC.location = locationItem.coordinate
-            }
+            }) { error in
+                print("[ERROR]: \(error)")
+                let alert = Popup(message: error.localizedDescription, title: error.localizedFailureReason ?? "", closeTitle: "Close", handler: { _ in
+                    self.navigationController?.popViewControllerAnimated(true)
+                })
+                alert.presentForController(self)
         }
     }
     
@@ -443,20 +431,37 @@ class ChatViewController: JSQMessagesViewController {
         let dayAgo = theCalendar.dateByAddingComponents(dateComponents, toDate: now, options: NSCalendarOptions(rawValue: 0))
         
         channel.messagesBetweenStartDate(dayAgo, endDate: now, limit: 100, offset: 0, ascending: true, success: { [weak self] _ , messages in
-            self?.messages = messages.map({
-                let message = Message(message: $0)
+            self?.messages = messages.map({ mmxMessage in
+                let message = Message(message: mmxMessage)
                 if message.isMediaMessage() {
-                    message.mediaCompletionBlock = { [weak self] in self?.collectionView?.reloadData() }
+                    message.mediaCompletionBlock = { [weak self] () in
+                        self?.collectionView?.reloadItemsAtIndexPaths([NSIndexPath(forItem: messages.indexOf(mmxMessage)!, inSection: 0)])
+                    }
                 }
                 return message
             })
             self?.collectionView?.reloadData()
             self?.scrollToBottomAnimated(false)
-        }, failure: { error in
-            print(error)
+            }, failure: { error in
+                print(error)
         })
     }
-
+    
+    // MARK: - Navigation
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "showDetailsSegue" {
+            if let detailVC = segue.destinationViewController as? DetailsViewController {
+                detailVC.recipients = recipients
+                detailVC.channel = chat
+            }
+        } else if segue.identifier == "showMapViewController" {
+            if let locationItem = sender as? JSQLocationMediaItem {
+                let mapVC = segue.destinationViewController as! MapViewController
+                mapVC.location = locationItem.coordinate
+            }
+        }
+    }
 }
 
 extension ChatViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {

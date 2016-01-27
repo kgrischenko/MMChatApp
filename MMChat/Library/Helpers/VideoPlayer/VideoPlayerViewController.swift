@@ -15,6 +15,7 @@ class VideoPlayerViewController: BaseViewController, DZVideoPlayerViewController
     var videoPlayerViewController: DZVideoPlayerViewController!
     var attachment: MMAttachment!
     var fileURL: NSURL!
+    private var hideStatusBar = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,17 +43,21 @@ class VideoPlayerViewController: BaseViewController, DZVideoPlayerViewController
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
+        // Show Status Bar
+        hideStatusBar = false
+        setNeedsStatusBarAppearanceUpdate()
+        
         if NSFileManager.defaultManager().fileExistsAtPath(fileURL!.path!) {
             try! NSFileManager.defaultManager().removeItemAtURL(fileURL!)
         }
     }
     
     override func prefersStatusBarHidden() -> Bool {
-        return true
+        return hideStatusBar
     }
     
     override func preferredStatusBarUpdateAnimation() -> UIStatusBarAnimation {
-        return .Slide
+        return .None
     }
     
     func startPlay() {
