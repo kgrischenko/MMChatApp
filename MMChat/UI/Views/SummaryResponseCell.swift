@@ -37,7 +37,7 @@ class SummaryResponseCell: UITableViewCell {
                 lblSubscribers.text = subscribersTitle
             }
             if let messages = summaryResponse.messages as? [MMXPubSubItemChannel], content = messages.last?.content as! [String : String]! {
-                lblMessage.text = content["message"] ?? "Attachment file"
+                lblMessage.text = content[Constants.ContentKey.Message] ?? "Attachment file"
             } else {
                 lblMessage.text = ""
             }

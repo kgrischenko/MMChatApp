@@ -9,7 +9,7 @@
 import UIKit
 import MagnetMax
 
-class ChannelManager: NSObject {
+class ChannelManager {
     
     static let sharedInstance = ChannelManager()
 
@@ -79,8 +79,7 @@ class ChannelManager: NSObject {
     
     // MARK: - Private implementation
     
-    private override init() {
-        super.init()
+    private init() {
 
     }
     

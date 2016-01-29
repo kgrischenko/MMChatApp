@@ -56,6 +56,7 @@
 		8B8E80381C2ACDBE008D8C43 /* BaseNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E80371C2ACDBE008D8C43 /* BaseNavigationController.swift */; };
 		8B8E803A1C2AE17E008D8C43 /* ForgotPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E80391C2AE17E008D8C43 /* ForgotPasswordViewController.swift */; };
 		8B8E803C1C2AE733008D8C43 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8E803B1C2AE733008D8C43 /* RegisterViewController.swift */; };
+		8B901AEE1C5BBC2800AA5DF1 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B901AED1C5BBC2800AA5DF1 /* Constants.swift */; };
 		8B9C67651C522D5F00661586 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B9C67641C522D5F00661586 /* Photo.swift */; };
 		8BA6E34C1C3D94380095F65F /* messages.png in Resources */ = {isa = PBXBuildFile; fileRef = 8BA6E34B1C3D94380095F65F /* messages.png */; };
 		8BDF49DA1C32FD5500F0E51B /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BDF49D91C32FD5500F0E51B /* SWRevealViewController.m */; };
@@ -129,6 +130,7 @@
 		8B8E80371C2ACDBE008D8C43 /* BaseNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseNavigationController.swift; sourceTree = "<group>"; };
 		8B8E80391C2AE17E008D8C43 /* ForgotPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ForgotPasswordViewController.swift; sourceTree = "<group>"; };
 		8B8E803B1C2AE733008D8C43 /* RegisterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
+		8B901AED1C5BBC2800AA5DF1 /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		8B9C67641C522D5F00661586 /* Photo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		8BA6E34B1C3D94380095F65F /* messages.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = messages.png; sourceTree = "<group>"; };
 		8BDF49D81C32FD5500F0E51B /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
@@ -374,6 +376,7 @@
 				8B1B543B1C46CCB7002B268C /* Categories */,
 				8B8E802E1C2ACA1F008D8C43 /* Base classes */,
 				8B8E802F1C2ACA1F008D8C43 /* Helpers */,
+				8B901AED1C5BBC2800AA5DF1 /* Constants.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -628,6 +631,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8B901AEE1C5BBC2800AA5DF1 /* Constants.swift in Sources */,
 				8BF254C01C49697A008719AA /* Popup.swift in Sources */,
 				8BDF49DA1C32FD5500F0E51B /* SWRevealViewController.m in Sources */,
 				8B81C1351C3C22CA00C186B6 /* DownloadManager.swift in Sources */,
@@ -786,7 +790,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.magnet.iOS.MMChat;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "1e7c6354-8d72-41d4-ae92-f68eef48faec";
 				SWIFT_OBJC_BRIDGING_HEADER = "MMChat/MMChat-Bridging-Header.h";
 			};
 			name = Debug;

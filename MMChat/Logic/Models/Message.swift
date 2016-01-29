@@ -94,7 +94,7 @@ class Message : NSObject, JSQMessageData {
     }
     
     func text() -> String! {
-        return underlyingMessage.messageContent["message"]! as String
+        return underlyingMessage.messageContent[Constants.ContentKey.Message]! as String
     }
     
     func media() -> JSQMessageMediaData! {

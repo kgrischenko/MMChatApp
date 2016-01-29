@@ -14,7 +14,6 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
     let searchController = UISearchController(searchResultsController: nil)
     var summaryResponses : [MMXChannelSummaryResponse] = []
     var filteredSummaryResponses : [MMXChannelSummaryResponse] = []
-    var subscribedChannels : [MMXChannel] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -174,7 +173,6 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
         // Get all channels the current user is subscribed to
         MMXChannel.subscribedChannelsWithSuccess({ [weak self] channels in
             ChannelManager.sharedInstance.channels = channels
-            self?.subscribedChannels = channels
             // Get summaries
             let channelsSet = Set(channels)
             MMXChannel.channelSummary(channelsSet, numberOfMessages: 10, numberOfSubcribers: 10, success: { summaryResponses in
@@ -197,7 +195,7 @@ class HomeViewController: UITableViewController, UISearchResultsUpdating, Contac
             if let pubSubItems = summary.messages as? [MMXPubSubItemChannel] {
                 for message in pubSubItems {
                     let content = message.content as! [String : String]!
-                    if let text = content["message"] where text.containsString(searchString) {
+                    if let text = content[Constants.ContentKey.Message] where text.containsString(searchString) {
                         return true
                     }
                 }

@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MMChat/UI/Controllers/ChatViewController.swift"
-            timestampString = "475612570.248394"
+            timestampString = "475779374.199059"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "491"
-            endingLineNumber = "491"
+            startingLineNumber = "501"
+            endingLineNumber = "501"
             landmarkName = "imagePickerController(_:didFinishPickingMediaWithInfo:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -36,11 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "MMChat/UI/Controllers/ChatViewController.swift"
-            timestampString = "475612570.248394"
+            timestampString = "475779374.199059"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "479"
-            endingLineNumber = "479"
+            startingLineNumber = "489"
+            endingLineNumber = "489"
             landmarkName = "imagePickerController(_:didFinishPickingMediaWithInfo:)"
             landmarkType = "5">
          </BreakpointContent>
